@@ -1,0 +1,17 @@
+{
+  "name": "pancakeBank",
+  "packageManager": "yarn@4.9.1",
+  "dependencies": {
+    "discord.js": "^14.19.3",
+    "dotenv": "^16.5.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.28.0",
+    "eslint": "^9.27.0"
+  },
+  "scripts": {
+    "dev": "node ./src/app.js",
+    "deploy:dev": "node ./src/util/deployCommandsDev.js",
+    "deploy:global": "node ./src/util/deployCommandsGlobal.js"
+  }
+}
