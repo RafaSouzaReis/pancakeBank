@@ -33,7 +33,7 @@ module.exports = {
     if (!server) {
       await interaction.reply({
         content:
-          "Você não esta registrado, utilize `/register-user` para se registrar!",
+          "Servidor não registrado peça ao administrador que utilize o comando `/register!` para registrar o servidor",
         ephemeral: MessageFlags.ephemeral,
       });
     }
