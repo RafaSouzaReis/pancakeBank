@@ -40,11 +40,11 @@ module.exports = {
 
     const embed = new EmbedBuilder()
       .setColor("Gold")
-      .setTitle(`${emoji} Saldo de ${interaction.user.username}! ${emoji}`)
+      .setTitle(`:coin:  Saldo de ${interaction.user.username}! :coin: `)
       .setDescription(`Veja abaixo o saldo atual em ${coin}`)
       .addFields({
         name: "Saldo",
-        value: `${emoji}${balanceFormatted}`,
+        value: `${emoji}$${balanceFormatted}`,
         inline: true,
       })
       .setThumbnail(interaction.user.displayAvatarURL({ dynamic: true }))
