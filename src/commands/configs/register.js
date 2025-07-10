@@ -42,6 +42,22 @@ module.exports = {
       return;
     }
 
+    if (!interaction.member.permissions.has("Administrator")) {
+      await interaction.reply({
+        content: "❌ Apenas administradores podem usar este comando.",
+        flags: MessageFlags.Ephemeral,
+      });
+      return;
+    }
+
+    if (!interaction.inGuild()) {
+      await interaction.reply({
+        content: "❌ O comando so poder ser executado em um servidor.",
+        flags: MessageFlags.Ephemeral,
+      });
+      return;
+    }
+
     const emojiId = emojiMatch[1];
     const emojiURL = `https://cdn.discordapp.com/emojis/${emojiId}.${
       regexGif.test(emoji) ? "gif" : "png"
