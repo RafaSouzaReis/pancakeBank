@@ -13,6 +13,7 @@ const UserSchema = new mongoose.Schema(
     totalSpent: { type: mongoose.Schema.Types.Decimal128, default: 0 },
     loan: { type: mongoose.Schema.Types.Decimal128, default: 0 },
     loanDate: { type: Date, default: null },
+    lastDaily: { type: Date, default: null },
   },
   {
     timestamps: true,
