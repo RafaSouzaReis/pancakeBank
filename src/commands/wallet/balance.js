@@ -1,42 +1,38 @@
-const {
-  SlashCommandBuilder,
-  MessageFlags,
-  EmbedBuilder,
-} = require("discord.js");
+const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const User = require("../../database/models/userschema");
 const Guild = require("../../database/models/guildschema");
 const Decimal = require("decimal.js");
+const {
+  ServerVerification,
+  UserVerification,
+  InGuild,
+} = require("../../services/verifications");
 
 module.exports = {
   cooldown: 5,
   data: new SlashCommandBuilder()
     .setName("balance")
     .setDescription("Ver saldo"),
-  async execute(interaction) {
-    const user = await User.findOne({ userId: interaction.user.id });
-    const server = await Guild.findOne({ guildId: interaction.guild.id });
-    const emoji = server.emojiRaw;
-    const coin = server.coinName;
 
+  async execute(interaction) {
+    const inGuild = await InGuild(interaction);
+    if (!inGuild) {
+      return;
+    }
+    const server = await ServerVerification(interaction);
+    if (!server) {
+      return;
+    }
+    const user = await UserVerification(interaction);
     if (!user) {
-      await interaction.reply({
-        content:
-          "Você não esta registrado, utilize `/register-user` para se registrar!",
-        flags: MessageFlags.ephemeral,
-      });
       return;
     }
 
+    const emoji = server.emojiRaw;
+    const coin = server.coinName;
+
     const balanceDecimal = new Decimal(user.balance.toString());
     const balanceFormatted = balanceDecimal.toFixed(2);
-
-    if (!server) {
-      await interaction.reply({
-        content:
-          "Servidor não registrado peça ao administrador que utilize o comando `/register!` para registrar o servidor",
-        flags: MessageFlags.ephemeral,
-      });
-    }
 
     const embed = new EmbedBuilder()
       .setColor("Gold")

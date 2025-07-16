@@ -1,5 +1,10 @@
 const { SlashCommandBuilder, MessageFlags } = require("discord.js");
 const User = require("../../database/models/userschema");
+const {
+  ServerVerification,
+  InGuild,
+  UserExist,
+} = require("../../services/verifications");
 
 module.exports = {
   cooldown: 5,
@@ -7,13 +12,18 @@ module.exports = {
     .setName("register-user")
     .setDescription("Register User"),
   async execute(interaction) {
-    const userCreate = await User.findOne({ userId: interaction.user.id });
+    const inGuild = await InGuild(interaction);
+    if (!inGuild) {
+      return;
+    }
 
-    if (userCreate) {
-      await interaction.reply({
-        content: `Usuario Já Registrado!`,
-        flags: MessageFlags.Ephemeral,
-      });
+    const server = await ServerVerification(interaction);
+    if (!server) {
+      return;
+    }
+
+    const userAlreadyExists = await UserExist(interaction);
+    if (userAlreadyExists) {
       return;
     }
 

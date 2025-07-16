@@ -1,8 +1,4 @@
-const {
-  SlashCommandBuilder,
-  MessageFlags,
-  EmbedBuilder,
-} = require("discord.js");
+const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const User = require("../../database/models/userschema");
 const Guild = require("../../database/models/guildschema");
 const Decimal = require("decimal.js");
@@ -10,6 +6,7 @@ const {
   ServerVerification,
   UserVerification,
   InGuild,
+  AlreadyClaimed,
 } = require("../../services/verifications");
 
 module.exports = {
@@ -18,6 +15,11 @@ module.exports = {
     .setName("daily")
     .setDescription("Receba o premio diario"),
   async execute(interaction) {
+    const inGuild = await InGuild(interaction);
+    if (!inGuild) {
+      return;
+    }
+
     const server = await ServerVerification(interaction);
     if (!server) {
       return;
@@ -25,11 +27,6 @@ module.exports = {
 
     const user = await UserVerification(interaction);
     if (!user) {
-      return;
-    }
-
-    const inGuild = await InGuild(interaction);
-    if (!inGuild) {
       return;
     }
 
@@ -43,17 +40,8 @@ module.exports = {
     const emoji = server.emojiRaw;
     const coin = server.coinName;
     const now = new Date();
-    const alreadyClaimed =
-      user.lastDaily &&
-      user.lastDaily.getDate() === now.getDate() &&
-      user.lastDaily.getMonth() === now.getMonth() &&
-      user.lastDaily.getFullYear() === now.getFullYear();
 
-    if (alreadyClaimed) {
-      await interaction.reply({
-        content: "Você ja coletou sua recompensa, tente amanha!",
-        flags: MessageFlags.ephemeral,
-      });
+    if (!(await AlreadyClaimed(interaction, now))) {
       return;
     }
 

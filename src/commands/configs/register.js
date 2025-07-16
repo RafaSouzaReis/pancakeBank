@@ -1,5 +1,11 @@
 const { SlashCommandBuilder, MessageFlags } = require("discord.js");
 const Guild = require("../../database/models/guildschema");
+const {
+  InGuild,
+  EmojiMatchCheck,
+  AdministratorCheck,
+  GuildRegisterCheck,
+} = require("../../services/verifications");
 
 module.exports = {
   cooldown: 5,
@@ -29,32 +35,20 @@ module.exports = {
     ),
 
   async execute(interaction) {
-    const server = await Guild.findOne({ guildId: interaction.guild.id });
+    const inGuild = await InGuild(interaction);
+    if (!inGuild) {
+      return;
+    }
+
     const emoji = interaction.options.getString("emoji");
     const emojiMatch = emoji.match(/.*?:.*?:(\d+)/);
     const regexGif = /^<a?:[a-zA-Z0-9_]+:\d+>$/;
 
-    if (!emojiMatch) {
-      await interaction.reply({
-        content: `Emoji Inválido, Por favor utilize um emoji personalizado do servidor!`,
-        flags: MessageFlags.Ephemeral,
-      });
+    if (!(await EmojiMatchCheck(emojiMatch, interaction))) {
       return;
     }
 
-    if (!interaction.member.permissions.has("Administrator")) {
-      await interaction.reply({
-        content: "❌ Apenas administradores podem usar este comando.",
-        flags: MessageFlags.Ephemeral,
-      });
-      return;
-    }
-
-    if (!interaction.inGuild()) {
-      await interaction.reply({
-        content: "❌ O comando so poder ser executado em um servidor.",
-        flags: MessageFlags.Ephemeral,
-      });
+    if (!(await AdministratorCheck(interaction))) {
       return;
     }
 
@@ -63,11 +57,7 @@ module.exports = {
       regexGif.test(emoji) ? "gif" : "png"
     }`;
 
-    if (server) {
-      await interaction.reply({
-        content: `Servidor Já Registrado!`,
-        flags: MessageFlags.Ephemeral,
-      });
+    if (!(await GuildRegisterCheck(interaction))) {
       return;
     }
 

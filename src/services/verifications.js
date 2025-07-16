@@ -8,11 +8,12 @@ async function ServerVerification(interaction) {
   if (!server) {
     await interaction.reply({
       content:
-        "Servidor não registrado peça ao administrador que utilize o comando `/register!` para registrar o servidor",
+        "Servidor não registrado. Peça ao administrador que use `/register` para registrar o servidor.",
       flags: MessageFlags.ephemeral,
     });
     return null;
   }
+
   return server;
 }
 
@@ -22,18 +23,44 @@ async function UserVerification(interaction) {
   if (!user) {
     await interaction.reply({
       content:
-        "Você não esta registrado, utilize `/register-user` para se registrar!",
+        "Você não está registrado. Use `/register-user` para se registrar!",
       flags: MessageFlags.ephemeral,
     });
     return null;
   }
+
   return user;
 }
 
-async function InGuild(interaction) {
+function InGuild(interaction) {
   if (!interaction.inGuild()) {
+    interaction.reply({
+      content: "❌ Este comando só pode ser executado dentro de um servidor.",
+      flags: MessageFlags.ephemeral,
+    });
+    return false;
+  }
+  return true;
+}
+
+async function UserExist(interaction) {
+  const user = await User.findOne({ userId: interaction.user.id });
+
+  if (user) {
     await interaction.reply({
-      content: "❌ O comando so poder ser executado em um servidor.",
+      content: "Usuário já registrado!",
+      flags: MessageFlags.ephemeral,
+    });
+    return true;
+  }
+
+  return false;
+}
+
+async function EmojiMatchCheck(emojiMatch, interaction) {
+  if (!emojiMatch) {
+    await interaction.reply({
+      content: `Emoji Inválido, Por favor utilize um emoji personalizado do servidor!`,
       flags: MessageFlags.Ephemeral,
     });
     return false;
@@ -41,4 +68,55 @@ async function InGuild(interaction) {
   return true;
 }
 
-module.exports = { ServerVerification, UserVerification, InGuild };
+async function AdministratorCheck(interaction) {
+  if (!interaction.member.permissions.has("Administrator")) {
+    await interaction.reply({
+      content: "❌ Apenas administradores podem usar este comando.",
+      flags: MessageFlags.Ephemeral,
+    });
+    return false;
+  }
+  return true;
+}
+
+async function GuildRegisterCheck(interaction) {
+  const server = await Guild.findOne({ guildId: interaction.guild.id });
+
+  if (server) {
+    await interaction.reply({
+      content: `Servidor Já Registrado!`,
+      flags: MessageFlags.Ephemeral,
+    });
+    return false;
+  }
+  return true;
+}
+
+async function AlreadyClaimed(interaction, now) {
+  const user = await User.findOne({ userId: interaction.user.id });
+  const alreadyClaimed =
+    user.lastDaily &&
+    user.lastDaily.getDate() === now.getDate() &&
+    user.lastDaily.getMonth() === now.getMonth() &&
+    user.lastDaily.getFullYear() === now.getFullYear();
+
+  if (alreadyClaimed) {
+    await interaction.reply({
+      content: "Você ja coletou sua recompensa, tente amanha!",
+      flags: MessageFlags.ephemeral,
+    });
+    return false;
+  }
+  return true;
+}
+
+module.exports = {
+  ServerVerification,
+  UserVerification,
+  InGuild,
+  UserExist,
+  EmojiMatchCheck,
+  AdministratorCheck,
+  GuildRegisterCheck,
+  AlreadyClaimed,
+};
