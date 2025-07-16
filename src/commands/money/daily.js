@@ -1,6 +1,4 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
-const User = require("../../database/models/userschema");
-const Guild = require("../../database/models/guildschema");
 const Decimal = require("decimal.js");
 const {
   ServerVerification,
@@ -51,7 +49,7 @@ module.exports = {
 
     const embed = new EmbedBuilder()
       .setColor("Gold")
-      .setTitle(":moneybag:Daily:moneybag: ")
+      .setTitle(":fortune_cookie:Daily:fortune_cookie:")
       .setDescription(
         `Voce recebeu em ${coin} o valor:\n${emoji}$${daily.toFixed(2)}`
       )

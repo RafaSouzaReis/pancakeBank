@@ -1,6 +1,4 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
-const User = require("../../database/models/userschema");
-const Guild = require("../../database/models/guildschema");
 const Decimal = require("decimal.js");
 const {
   ServerVerification,

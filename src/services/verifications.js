@@ -110,6 +110,16 @@ async function AlreadyClaimed(interaction, now) {
   return true;
 }
 
+async function ReceivedZero(interaction, received) {
+  if (received === 0) {
+    await interaction.reply({
+      content: `Infelizmente você nao conseguiu mineirar nada, tente novamente! mais tarde!`,
+    });
+    return true;
+  }
+  return false;
+}
+
 module.exports = {
   ServerVerification,
   UserVerification,
@@ -119,4 +129,5 @@ module.exports = {
   AdministratorCheck,
   GuildRegisterCheck,
   AlreadyClaimed,
+  ReceivedZero,
 };
