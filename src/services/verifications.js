@@ -2,7 +2,7 @@ const Guild = require("../database/models/guildschema");
 const User = require("../database/models/userschema");
 const { MessageFlags } = require("discord.js");
 
-async function ServerVerification(interaction) {
+async function GuildCheck(interaction) {
   const server = await Guild.findOne({ guildId: interaction.guild.id });
 
   if (!server) {
@@ -17,7 +17,7 @@ async function ServerVerification(interaction) {
   return server;
 }
 
-async function UserVerification(interaction) {
+async function UserCheck(interaction, target = null) {
   const user = await User.findOne({ userId: interaction.user.id });
 
   if (!user) {
@@ -27,6 +27,26 @@ async function UserVerification(interaction) {
       flags: MessageFlags.ephemeral,
     });
     return null;
+  }
+
+  if (target) {
+    const targetUser = await User.findOne({ userId: target.id });
+    if (!targetUser) {
+      await interaction.reply({
+        content:
+          "Membro não está registrado. Peça para que ele use o comando `/register-user` para se registrar!",
+        flags: MessageFlags.ephemeral,
+      });
+      return null;
+    }
+
+    if (user.userId === targetUser.userId) {
+      await interaction.reply({
+        content: "Voce não pode fazer uma transferencia para si mesmo",
+        flags: MessageFlags.ephemeral,
+      });
+      return null;
+    }
   }
 
   return user;
@@ -57,7 +77,7 @@ async function UserExist(interaction) {
   return false;
 }
 
-async function EmojiMatchCheck(emojiMatch, interaction) {
+async function EmojiCheck(emojiMatch, interaction) {
   if (!emojiMatch) {
     await interaction.reply({
       content: `Emoji Inválido, Por favor utilize um emoji personalizado do servidor!`,
@@ -68,7 +88,7 @@ async function EmojiMatchCheck(emojiMatch, interaction) {
   return true;
 }
 
-async function AdministratorCheck(interaction) {
+async function ADMCheck(interaction) {
   if (!interaction.member.permissions.has("Administrator")) {
     await interaction.reply({
       content: "❌ Apenas administradores podem usar este comando.",
@@ -120,14 +140,38 @@ async function ReceivedZero(interaction, received) {
   return false;
 }
 
+async function ValuePlusZero(interaction, value) {
+  if (value <= 0) {
+    await interaction.reply({
+      content: "Insira um valor maior que 0!",
+      flags: MessageFlags.Ephemeral,
+    });
+    return true;
+  }
+  return false;
+}
+
+async function BalanceCheck(interaction, user, value) {
+  if (user.balance < value) {
+    await interaction.reply({
+      content: "Saldo insufiente!",
+      flags: MessageFlags.Ephemeral,
+    });
+    return true;
+  }
+  return false;
+}
+
 module.exports = {
-  ServerVerification,
-  UserVerification,
+  GuildCheck,
+  UserCheck,
   InGuild,
   UserExist,
-  EmojiMatchCheck,
-  AdministratorCheck,
+  EmojiCheck,
+  ADMCheck,
   GuildRegisterCheck,
   AlreadyClaimed,
   ReceivedZero,
+  ValuePlusZero,
+  BalanceCheck,
 };

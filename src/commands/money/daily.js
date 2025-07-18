@@ -1,10 +1,10 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const Decimal = require("decimal.js");
 const {
-  ServerVerification,
-  UserVerification,
+  GuildCheck,
+  UserCheck,
   InGuild,
-  AlreadyClaimed,
+  DailyCheck,
 } = require("../../services/verifications");
 
 module.exports = {
@@ -18,12 +18,12 @@ module.exports = {
       return;
     }
 
-    const server = await ServerVerification(interaction);
+    const server = await GuildCheck(interaction);
     if (!server) {
       return;
     }
 
-    const user = await UserVerification(interaction);
+    const user = await UserCheck(interaction);
     if (!user) {
       return;
     }
@@ -39,7 +39,7 @@ module.exports = {
     const coin = server.coinName;
     const now = new Date();
 
-    if (!(await AlreadyClaimed(interaction, now))) {
+    if (!(await DailyCheck(interaction, now))) {
       return;
     }
 

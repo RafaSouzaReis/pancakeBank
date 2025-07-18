@@ -1,7 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const {
-  ServerVerification,
-  UserVerification,
+  GuildCheck,
+  UserCheck,
   InGuild,
   ReceivedZero,
 } = require("../../services/verifications");
@@ -22,12 +22,12 @@ module.exports = {
       return;
     }
 
-    const server = await ServerVerification(interaction);
+    const server = await GuildCheck(interaction);
     if (!server) {
       return;
     }
 
-    const user = await UserVerification(interaction);
+    const user = await UserCheck(interaction);
     if (!user) {
       return;
     }

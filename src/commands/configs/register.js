@@ -2,8 +2,8 @@ const { SlashCommandBuilder, MessageFlags } = require("discord.js");
 const Guild = require("../../database/models/guildschema");
 const {
   InGuild,
-  EmojiMatchCheck,
-  AdministratorCheck,
+  EmojiCheck,
+  ADMCheck,
   GuildRegisterCheck,
 } = require("../../services/verifications");
 
@@ -44,11 +44,11 @@ module.exports = {
     const emojiMatch = emoji.match(/.*?:.*?:(\d+)/);
     const regexGif = /^<a?:[a-zA-Z0-9_]+:\d+>$/;
 
-    if (!(await EmojiMatchCheck(emojiMatch, interaction))) {
+    if (!(await EmojiCheck(emojiMatch, interaction))) {
       return;
     }
 
-    if (!(await AdministratorCheck(interaction))) {
+    if (!(await ADMCheck(interaction))) {
       return;
     }
 

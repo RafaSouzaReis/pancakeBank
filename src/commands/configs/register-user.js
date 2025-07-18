@@ -1,7 +1,7 @@
 const { SlashCommandBuilder, MessageFlags } = require("discord.js");
 const User = require("../../database/models/userschema");
 const {
-  ServerVerification,
+  GuildCheck,
   InGuild,
   UserExist,
 } = require("../../services/verifications");
@@ -17,7 +17,7 @@ module.exports = {
       return;
     }
 
-    const server = await ServerVerification(interaction);
+    const server = await GuildCheck(interaction);
     if (!server) {
       return;
     }
