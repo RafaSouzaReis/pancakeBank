@@ -1,10 +1,6 @@
 const { SlashCommandBuilder, MessageFlags } = require("discord.js");
 const User = require("../../database/models/userschema");
-const {
-  GuildCheck,
-  InGuild,
-  UserExist,
-} = require("../../services/verifications");
+const { GuildCheck, InGuild, UserExist } = require("../../services/export");
 
 module.exports = {
   cooldown: 5,

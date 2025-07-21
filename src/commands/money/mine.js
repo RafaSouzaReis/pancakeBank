@@ -1,10 +1,10 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const {
-  GuildCheck,
-  UserCheck,
   InGuild,
   ReceivedZero,
-} = require("../../services/verifications");
+  UserCheck,
+  GuildCheck,
+} = require("../../services/export");
 
 const Decimal = require("decimal.js");
 

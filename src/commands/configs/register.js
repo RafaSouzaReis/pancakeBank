@@ -4,8 +4,8 @@ const {
   InGuild,
   EmojiCheck,
   ADMCheck,
-  GuildRegisterCheck,
-} = require("../../services/verifications");
+  GuildExist,
+} = require("../../services/export");
 
 module.exports = {
   cooldown: 5,
@@ -57,7 +57,7 @@ module.exports = {
       regexGif.test(emoji) ? "gif" : "png"
     }`;
 
-    if (!(await GuildRegisterCheck(interaction))) {
+    if (!(await GuildExist(interaction))) {
       return;
     }
 

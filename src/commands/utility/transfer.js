@@ -7,7 +7,9 @@ const {
   InGuild,
   ValuePlusZero,
   BalanceCheck,
-} = require("../../services/verifications");
+  TargetIsYou,
+  TargetExist,
+} = require("../../services/export");
 
 module.exports = {
   cooldown: 5,
@@ -45,6 +47,15 @@ module.exports = {
       return;
     }
 
+    const targetUser = TargetExist(target);
+    if (!targetUser) {
+      return;
+    }
+
+    if (TargetIsYou) {
+      return;
+    }
+
     if (await ValuePlusZero(interaction, value)) {
       return;
     }
@@ -53,7 +64,6 @@ module.exports = {
       return;
     }
 
-    const targetUser = await User.findOne({ userId: target.id });
     const coin = await server.coinName;
     const emoji = await server.emojiRaw;
     const emojiURL = await server.emojiURL;

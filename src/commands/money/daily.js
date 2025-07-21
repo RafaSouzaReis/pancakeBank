@@ -1,11 +1,11 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const Decimal = require("decimal.js");
 const {
-  GuildCheck,
-  UserCheck,
   InGuild,
-  DailyCheck,
-} = require("../../services/verifications");
+  AlreadyClaimed,
+  UserCheck,
+  GuildCheck,
+} = require("../../services/export");
 
 module.exports = {
   cooldown: 5,
@@ -39,7 +39,7 @@ module.exports = {
     const coin = server.coinName;
     const now = new Date();
 
-    if (!(await DailyCheck(interaction, now))) {
+    if (!(await AlreadyClaimed(interaction, now))) {
       return;
     }
 
