@@ -1,5 +1,7 @@
 jest.mock("../services/export");
-jest.mock("../database/models/guildschema");
+jest.mock("../database/models/guildschema", () =>
+  require("./mocks/database/models/guildschema")
+);
 
 const {
   InGuild,
@@ -9,7 +11,6 @@ const {
 } = require("../services/export");
 const Guild = require("../database/models/guildschema");
 const command = require("../commands/configs/register");
-console.log("Guild.mock", Guild.mock);
 
 describe("/register", () => {
   let mockInteraction;
@@ -60,7 +61,7 @@ describe("/register", () => {
     expect(guildInstance.save).toHaveBeenCalled();
 
     expect(mockInteraction.reply).toHaveBeenCalledWith({
-      content: "registro feito com sucesso!",
+      content: "Registro feito com sucesso!",
       flags: expect.any(Number),
     });
   });
