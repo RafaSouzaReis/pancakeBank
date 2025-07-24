@@ -16,6 +16,7 @@
   "scripts": {
     "dev": "node ./src/app.js",
     "deploy:dev": "node ./src/util/deployCommandsDev.js",
-    "deploy:global": "node ./src/util/deployCommandsGlobal.js"
+    "deploy:global": "node ./src/util/deployCommandsGlobal.js",
+    "test": "jest"
   }
 }
