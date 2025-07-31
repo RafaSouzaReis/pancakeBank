@@ -11,7 +11,6 @@ const {
 } = require("../services/export");
 const Guild = require("../database/models/guildschema");
 const command = require("../commands/configs/register");
-const { mock } = require("./mocks/database/models/guildschema");
 
 describe("/register", () => {
   let mockInteraction;

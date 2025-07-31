@@ -3,4 +3,5 @@ module.exports = {
   EmojiCheck: jest.fn(),
   ADMCheck: jest.fn(),
   GuildExist: jest.fn(),
+  UserExist: jest.fn(),
 };

@@ -13,6 +13,7 @@ const {
   ValuePlusZero,
   BalanceCheck,
 } = require("./verifications/transfer-check.js");
+const { UserCheck, UserExist } = require("./verifications/user-check.js");
 
 module.exports = {
   AlreadyClaimed,
@@ -26,4 +27,6 @@ module.exports = {
   TargetIsYou,
   ValuePlusZero,
   BalanceCheck,
+  UserCheck,
+  UserExist,
 };
