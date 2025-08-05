@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, MessageFlags } = require("discord.js");
 const User = require("../../database/models/userschema");
-const { GuildCheck, InGuild, UserExist } = require("../../services/export");
+const { GuildExist, InGuild, UserExist } = require("../../services/export");
 
 module.exports = {
   cooldown: 5,
@@ -13,7 +13,7 @@ module.exports = {
       return;
     }
 
-    const server = await GuildCheck(interaction);
+    const server = await GuildExist(interaction);
     if (!server) {
       return;
     }

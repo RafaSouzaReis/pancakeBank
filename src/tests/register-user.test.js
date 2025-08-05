@@ -3,8 +3,7 @@ jest.mock("../database/models/userschema", () =>
   require("./mocks/database/models/userschema")
 );
 
-const { GuildCheck, InGuild, UserExist } = require("../services/export");
-const Guild = require("../database/models/guildschema");
+const { InGuild, UserExist, GuildExist } = require("../services/export");
 const User = require("../database/models/userschema");
 const command = require("../commands/configs/register-user");
 
@@ -30,29 +29,64 @@ describe("/register-user", () => {
       },
       reply: jest.fn(),
     };
-    GuildCheck.mockResolvedValue(true);
     InGuild.mockResolvedValue(true);
+    GuildExist.mockResolvedValue(true);
     UserExist.mockResolvedValue(false);
   });
 
-  test("Deve retornar usuario registrado com sucesso", async () => {
-    await command.execute(mockInteraction);
-    expect(InGuild).toHaveBeenCalledWith(mockInteraction);
-    expect(GuildCheck).toHaveBeenCalledWith(mockInteraction);
-    expect(UserExist).toHaveBeenCalledWith(mockInteraction);
+  describe("Fluxo principal", () => {
+    test("Deve retornar usuario registrado com sucesso", async () => {
+      await command.execute(mockInteraction);
+      expect(InGuild).toHaveBeenCalledWith(mockInteraction);
+      expect(GuildExist).toHaveBeenCalledWith(mockInteraction);
+      expect(UserExist).toHaveBeenCalledWith(mockInteraction);
 
-    expect(User).toHaveBeenCalledWith(
-      expect.objectContaining({
-        userId: mockInteraction.user.id,
-        guildId: mockInteraction.guild.id,
-      })
-    );
-    const userInstance = User.mock.results[0].value;
-    expect(userInstance.save).toHaveBeenCalled();
+      expect(User).toHaveBeenCalledWith(
+        expect.objectContaining({
+          userId: mockInteraction.user.id,
+          guildId: mockInteraction.guild.id,
+        })
+      );
+      const userInstance = User.mock.results[0].value;
+      expect(userInstance.save).toHaveBeenCalled();
 
-    expect(mockInteraction.reply).toHaveBeenCalledWith({
-      content: "Registro feito com sucesso!",
-      flags: expect.any(Number),
+      expect(mockInteraction.reply).toHaveBeenCalledWith({
+        content: "Registro feito com sucesso!",
+        flags: expect.any(Number),
+      });
+    });
+  });
+
+  describe("InGuild", () => {
+    test("Deve retornar sem executar se o InGuild for false", async () => {
+      InGuild.mockResolvedValue(false);
+      await command.execute(mockInteraction);
+      expect(InGuild).toHaveBeenCalledWith(mockInteraction);
+      expect(GuildExist).not.toHaveBeenCalled();
+      expect(UserExist).not.toHaveBeenCalled();
+      expect(User).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("GuildExist", () => {
+    test("Deve retornar sem executar se o GuildExist for false", async () => {
+      GuildExist.mockResolvedValue(false);
+      await command.execute(mockInteraction);
+      expect(InGuild).toHaveBeenCalledWith(mockInteraction);
+      expect(GuildExist).toHaveBeenCalledWith(mockInteraction);
+      expect(UserExist).not.toHaveBeenCalled();
+      expect(User).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("UserExist", () => {
+    test("Deve retornar sem executar se o UserExist for true", async () => {
+      UserExist.mockResolvedValue(true);
+      await command.execute(mockInteraction);
+      expect(InGuild).toHaveBeenCalledWith(mockInteraction);
+      expect(GuildExist).toHaveBeenCalledWith(mockInteraction);
+      expect(UserExist).toHaveBeenCalledWith(mockInteraction);
+      expect(User).not.toHaveBeenCalled();
     });
   });
 });
