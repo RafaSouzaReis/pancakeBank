@@ -1,6 +1,6 @@
 jest.mock("../services/export");
 jest.mock("../database/models/userschema", () =>
-  require("./mocks/database/models/userschema")
+  require("./__mocks__/database/models/userschema")
 );
 
 const { InGuild, UserExist, GuildExist } = require("../services/export");

@@ -1,6 +1,6 @@
 jest.mock("../services/export");
 jest.mock("../database/models/guildschema", () =>
-  require("./mocks/database/models/guildschema")
+  require("./__mocks__/database/models/guildschema")
 );
 
 const {

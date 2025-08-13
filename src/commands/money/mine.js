@@ -2,8 +2,8 @@ const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const {
   InGuild,
   ReceivedZero,
-  UserCheck,
-  GuildCheck,
+  UserExist,
+  GuildExist,
 } = require("../../services/export");
 
 const Decimal = require("decimal.js");
@@ -22,12 +22,12 @@ module.exports = {
       return;
     }
 
-    const server = await GuildCheck(interaction);
+    const server = await GuildExist(interaction);
     if (!server) {
       return;
     }
 
-    const user = await UserCheck(interaction);
+    const user = await UserExist(interaction);
     if (!user) {
       return;
     }
