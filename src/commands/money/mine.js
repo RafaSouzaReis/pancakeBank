@@ -5,6 +5,8 @@ const {
   UserExist,
   GuildExist,
 } = require("../../services/export");
+const CalculeBalanceLogic = require("../../logic/calc-balance-logic");
+const LootLogic = require("../../logic/loot-logic");
 
 const Decimal = require("decimal.js");
 
@@ -12,11 +14,6 @@ module.exports = {
   cooldown: 30,
   data: new SlashCommandBuilder().setName("mine").setDescription("Miner coin"),
   async execute(interaction) {
-    const randomNumber = Math.random() * (100000 - 1) + 1;
-    const received = new Decimal(
-      randomNumber === 100000 ? 2000 : Math.random() * (200 - 0) + 0
-    );
-
     const inGuild = await InGuild(interaction);
     if (!inGuild) {
       return;
@@ -32,15 +29,20 @@ module.exports = {
       return;
     }
 
-    if (await ReceivedZero(interaction, received)) {
+    const { currentBalance, balanceFormatted, reward } = CalculeBalanceLogic(
+      user,
+      LootLogic([
+        { chance: 50, reward: 100000 },
+        { chance: 1000, reward: () => Math.random() * (200 - 0) + 0 },
+        true,
+      ])
+    );
+
+    if (await ReceivedZero(interaction, reward)) {
       return;
     }
     const coin = server.coinName;
     const emoji = server.emojiRaw;
-    const currentBalance = new Decimal(user.balance.toString());
-    const newBalance = currentBalance.plus(received);
-    const newBalanceFormatted = newBalance.toFixed(2);
-    user.balance = newBalanceFormatted.toString();
     await user.save();
 
     const embed = new EmbedBuilder()

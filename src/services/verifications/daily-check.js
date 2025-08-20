@@ -1,3 +1,5 @@
+const User = require("../../database/models/userschema");
+
 async function AlreadyClaimed(interaction, now) {
   const user = await User.findOne({ userId: interaction.user.id });
   const alreadyClaimed =

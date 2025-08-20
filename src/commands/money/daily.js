@@ -1,11 +1,12 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
-const Decimal = require("decimal.js");
 const {
   InGuild,
   AlreadyClaimed,
   UserExist,
   GuildExist,
 } = require("../../services/export");
+const CalculeBalanceLogic = require("../../logic/calc-balance-logic");
+const LootLogic = require("../../logic/loot-logic");
 
 module.exports = {
   cooldown: 5,
@@ -27,23 +28,20 @@ module.exports = {
     if (!user) {
       return;
     }
-
-    const randomNumber = Math.random() * (100 - 1) + 1;
-    const daily = new Decimal(
-      randomNumber === 100 ? 1000 : Math.random() * (500 - 0) + 0
+    const { currentBalance, balanceFormatted, value } = CalculeBalanceLogic(
+      user,
+      LootLogic([
+        { chance: 1, reward: 1000 },
+        { chance: 100, reward: () => Math.random() * (500 - 0) + 0 },
+      ])
     );
-    const currentBalance = new Decimal(user.balance.toString());
-    const newBalance = currentBalance.plus(daily);
-    const newBalanceFormatted = newBalance.toFixed(2);
-    const emoji = server.emojiRaw;
-    const coin = server.coinName;
     const now = new Date();
 
     if (!(await AlreadyClaimed(interaction, now))) {
       return;
     }
 
-    user.balance = newBalanceFormatted.toString();
+    user.balance = balanceFormatted.toString();
     user.lastDaily = now;
     await user.save();
 
@@ -51,12 +49,14 @@ module.exports = {
       .setColor("Gold")
       .setTitle(":fortune_cookie:Daily:fortune_cookie:")
       .setDescription(
-        `Voce recebeu em ${coin} o valor:\n${emoji}$${daily.toFixed(2)}`
+        `Voce recebeu em ${server.coinName} o valor:\n${
+          server.emojiRaw
+        }$${value.toFixed(2)}`
       )
       .addFields(
         {
           name: "Saldo Anterior:",
-          value: `${emoji}$${currentBalance.toFixed(2)}`,
+          value: `${server.emojiRaw}$${currentBalance.toFixed(2)}`,
           inline: true,
         },
         {
@@ -66,7 +66,7 @@ module.exports = {
         },
         {
           name: "Saldo Atual:",
-          value: `${emoji}$${newBalanceFormatted}`,
+          value: `${server.emojiRaw}$${balanceFormatted}`,
           inline: true,
         }
       )
