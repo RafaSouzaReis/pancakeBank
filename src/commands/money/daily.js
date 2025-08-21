@@ -28,7 +28,7 @@ module.exports = {
     if (!user) {
       return;
     }
-    const { currentBalance, balanceFormatted, value } = CalculeBalanceLogic(
+    const { currentBalance, balanceFormatted, money } = CalculeBalanceLogic(
       user,
       LootLogic([
         { chance: 1, reward: 1000 },
@@ -51,7 +51,7 @@ module.exports = {
       .setDescription(
         `Voce recebeu em ${server.coinName} o valor:\n${
           server.emojiRaw
-        }$${value.toFixed(2)}`
+        }$${money.toFixed(2)}`
       )
       .addFields(
         {

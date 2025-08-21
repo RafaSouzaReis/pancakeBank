@@ -1,9 +1,6 @@
-const Guild = require("../../database/models/guildschema");
 const { MessageFlags } = require("discord.js");
 
-async function GuildCheck(interaction) {
-  const server = await Guild.findOne({ guildId: interaction.guild.id });
-
+async function GuildCheck(interaction, server) {
   if (server) {
     await interaction.reply({
       content: "Servidor já registrado",
@@ -14,19 +11,17 @@ async function GuildCheck(interaction) {
   return false;
 }
 
-async function GuildExist(interaction) {
-  const server = await Guild.findOne({ guildId: interaction.guild.id });
-
+async function GuildExist(interaction, server) {
   if (!server) {
     await interaction.reply({
       content:
         "Servidor não registrado. Peça ao administrador que use `/register` para registrar o servidor.",
       flags: MessageFlags.ephemeral,
     });
-    return null;
+    return false;
   }
 
-  return server;
+  return true;
 }
 
 async function InGuild(interaction) {

@@ -29,7 +29,7 @@ module.exports = {
       return;
     }
 
-    const { currentBalance, balanceFormatted, reward } = CalculeBalanceLogic(
+    const { currentBalance, balanceFormatted, money } = CalculeBalanceLogic(
       user,
       LootLogic([
         { chance: 50, reward: 100000 },
@@ -38,7 +38,7 @@ module.exports = {
       ])
     );
 
-    if (await ReceivedZero(interaction, reward)) {
+    if (await ReceivedZero(interaction, money)) {
       return;
     }
     const coin = server.coinName;

@@ -1,5 +1,4 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
-const User = require("../../database/models/userschema");
 const Decimal = require("decimal.js");
 const {
   GuildExist,
@@ -10,6 +9,7 @@ const {
   TargetIsYou,
   TargetExist,
 } = require("../../services/export");
+const CalculeBalanceLogic = require("../../logic/calc-balance-logic");
 
 module.exports = {
   cooldown: 5,
@@ -67,18 +67,18 @@ module.exports = {
     const coin = await server.coinName;
     const emoji = await server.emojiRaw;
     const emojiURL = await server.emojiURL;
-    const currentBalanceDecimalUser = new Decimal(user.balance.toString());
-    const currentBalanceDecimalTarget = new Decimal(
-      targetUser.balance.toString()
+
+    const { currentBalance, balanceFormatted, money } = CalculeBalanceLogic(
+      user,
+      value,
+      true
     );
 
-    const newBalanceDecimalUser = currentBalanceDecimalUser.minus(value);
-    const newBalanceDecimalTarget = currentBalanceDecimalTarget.plus(value);
-    const newBalanceDecimalUserFormatted = newBalanceDecimalUser.toFixed(2);
-    const newBalanceDecimalTargetFormatted = newBalanceDecimalTarget.toFixed(2);
-
-    user.balance = newBalanceDecimalUserFormatted;
-    targetUser.balance = newBalanceDecimalTargetFormatted;
+    const {
+      currentBalance: currentBalanceTarget,
+      balanceFormatted: balanceFormattedTarget,
+      money: moneyTarget,
+    } = CalculeBalanceLogic(user, value);
 
     await user.save();
     await targetUser.save();

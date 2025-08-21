@@ -1,9 +1,6 @@
-const User = require("../../database/models/userschema");
 const { MessageFlags } = require("discord.js");
 
-async function UserCheck(interaction) {
-  const user = await User.findOne({ userId: interaction.user.id });
-
+async function UserCheck(interaction, user) {
   if (user) {
     await interaction.reply({
       content: "Usuário já registrado!",
@@ -14,18 +11,17 @@ async function UserCheck(interaction) {
   return false;
 }
 
-async function UserExist(interaction) {
-  const user = await User.findOne({ userId: interaction.user.id });
-
+async function UserExist(interaction, user, target = false) {
   if (!user) {
     await interaction.reply({
-      content:
-        "Você não está registrado. Use `/register-user` para se registrar!",
+      content: target
+        ? "Membro não está registrado. Peça para que ele use o comando `/register-user` para se registrar!"
+        : "Você não está registrado. Use `/register-user` para se registrar!",
       flags: MessageFlags.ephemeral,
     });
-    return null;
+    return false;
   }
-  return user;
+  return true;
 }
 
 module.exports = { UserCheck, UserExist };

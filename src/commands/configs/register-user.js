@@ -1,6 +1,11 @@
 const { SlashCommandBuilder, MessageFlags } = require("discord.js");
 const User = require("../../database/models/userschema");
-const { GuildExist, InGuild, UserExist } = require("../../services/export");
+const Guild = require("../../database/models/guildschema");
+const {
+  InGuild,
+  GuildExist,
+} = require("../../services/verifications/guild-check");
+const { UserExist } = require("../../services/verifications/user-check");
 
 module.exports = {
   cooldown: 5,
@@ -8,27 +13,29 @@ module.exports = {
     .setName("register-user")
     .setDescription("Register User"),
   async execute(interaction) {
-    const inGuild = await InGuild(interaction);
-    if (!inGuild) {
+    if (!(await InGuild(interaction))) {
       return;
     }
 
-    const server = await GuildExist(interaction);
-    if (!server) {
+    const server = await Guild.findOne({ guildId: interaction.guild.id });
+    if (!GuildExist(interaction, server)) {
       return;
     }
 
-    const userAlreadyExists = await UserExist(interaction);
-    if (userAlreadyExists) {
+    const user = await User.findOne({
+      userId: interaction.user.id,
+      guildId: interaction.guild.id,
+    });
+    if (UserExist(interaction, user)) {
       return;
     }
 
-    const user = new User({
+    const newUser = new User({
       userId: interaction.user.id,
       guildId: interaction.guild.id,
     });
 
-    await user.save();
+    await newUser.save();
 
     await interaction.reply({
       content: `Registro feito com sucesso!`,
