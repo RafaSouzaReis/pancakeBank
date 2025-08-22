@@ -35,8 +35,7 @@ module.exports = {
     ),
 
   async execute(interaction) {
-    const inGuild = await InGuild(interaction);
-    if (!inGuild) {
+    if (!(await InGuild(interaction))) {
       return;
     }
 
@@ -57,7 +56,8 @@ module.exports = {
       regexGif.test(emoji) ? "gif" : "png"
     }`;
 
-    if (!(await GuildExist(interaction))) {
+    const server = await Guild.findOne({ guildId: interaction.guild.id });
+    if (!GuildExist(interaction, server)) {
       return;
     }
 
