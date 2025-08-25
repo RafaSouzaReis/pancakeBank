@@ -1,10 +1,12 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
+const User = require("../../database/models/userschema");
+const Guild = require("../../database/models/guildschema");
 const {
   InGuild,
-  AlreadyClaimed,
-  UserExist,
   GuildExist,
-} = require("../../services/export");
+} = require("../../services/verifications/guild-check");
+const { UserExist } = require("../../services/verifications/user-check");
+const AlreadyClaimed = require("../../services/verifications/daily-check");
 const CalculeBalanceLogic = require("../../logic/calc-balance-logic");
 const LootLogic = require("../../logic/loot-logic");
 
@@ -14,20 +16,22 @@ module.exports = {
     .setName("daily")
     .setDescription("Receba o premio diario"),
   async execute(interaction) {
-    const inGuild = await InGuild(interaction);
-    if (!inGuild) {
+    if (!(await InGuild(interaction))) {
       return;
     }
 
-    const server = await GuildExist(interaction);
-    if (!server) {
+    const server = await Guild.findOne({ guildId: interaction.guild.id });
+    if (!GuildExist(interaction, server)) {
       return;
     }
 
-    const user = await UserExist(interaction);
-    if (!user) {
+    const user = await User.findOne({
+      userId: interaction.user.id,
+    });
+    if (UserExist(interaction, user)) {
       return;
     }
+
     const { currentBalance, balanceFormatted, money } = CalculeBalanceLogic(
       user,
       LootLogic([

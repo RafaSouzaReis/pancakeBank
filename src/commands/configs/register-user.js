@@ -24,7 +24,6 @@ module.exports = {
 
     const user = await User.findOne({
       userId: interaction.user.id,
-      guildId: interaction.guild.id,
     });
     if (UserExist(interaction, user)) {
       return;

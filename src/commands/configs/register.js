@@ -2,10 +2,10 @@ const { SlashCommandBuilder, MessageFlags } = require("discord.js");
 const Guild = require("../../database/models/guildschema");
 const {
   InGuild,
-  EmojiCheck,
-  ADMCheck,
   GuildExist,
-} = require("../../services/export");
+} = require("../../services/verifications/guild-check");
+const EmojiCheck = require("../../services/verifications/emoji-check");
+const ADMCheck = require("../../services/verifications/adm-check");
 
 module.exports = {
   cooldown: 5,
