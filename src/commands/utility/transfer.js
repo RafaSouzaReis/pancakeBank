@@ -4,7 +4,7 @@ const {
   GuildExist,
   UserExist,
   InGuild,
-  ValuePlusZero,
+  ValueCheck,
   BalanceCheck,
   TargetIsYou,
   TargetExist,
@@ -56,7 +56,7 @@ module.exports = {
       return;
     }
 
-    if (await ValuePlusZero(interaction, value)) {
+    if (await ValueCheck(interaction, value)) {
       return;
     }
 
