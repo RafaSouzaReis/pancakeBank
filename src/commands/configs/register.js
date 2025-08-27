@@ -1,11 +1,13 @@
 const { SlashCommandBuilder, MessageFlags } = require("discord.js");
 const Guild = require("../../database/models/guildschema");
 const {
-  InGuild,
-  GuildExist,
-} = require("../../services/verifications/guild-check");
-const EmojiCheck = require("../../services/verifications/emoji-check");
-const ADMCheck = require("../../services/verifications/adm-check");
+  isInGuild,
+  isEmojiValid,
+  isAdmin,
+  isGuildExist,
+} = require("../../helpers/guards/guild-verification");
+const messages = require("../../i18n/messages");
+const wrapInteraction = require("../../helpers/wrappers/wrap-interaction");
 
 module.exports = {
   cooldown: 5,
@@ -35,7 +37,7 @@ module.exports = {
     ),
 
   async execute(interaction) {
-    if (!(await InGuild(interaction))) {
+    if (!(await isInGuild(interaction))) {
       return;
     }
 
@@ -43,11 +45,11 @@ module.exports = {
     const emojiMatch = emoji.match(/.*?:.*?:(\d+)/);
     const regexGif = /^<a?:[a-zA-Z0-9_]+:\d+>$/;
 
-    if (!(await EmojiCheck(emojiMatch, interaction))) {
+    if (!(await isEmojiValid(emojiMatch, interaction))) {
       return;
     }
 
-    if (!(await ADMCheck(interaction))) {
+    if (!(await isAdmin(interaction))) {
       return;
     }
 
@@ -57,7 +59,7 @@ module.exports = {
     }`;
 
     const server = await Guild.findOne({ guildId: interaction.guild.id });
-    if (!GuildExist(interaction, server)) {
+    if (!isGuildExist(interaction, server)) {
       return;
     }
 
@@ -73,9 +75,12 @@ module.exports = {
         interaction.options.getNumber("taxa_cambial") ?? undefined,
     });
     await guild.save();
-    await interaction.reply({
-      content: `Registro feito com sucesso!`,
-      flags: MessageFlags.Ephemeral,
-    });
+
+    await wrapInteraction(interaction, (i) =>
+      i.reply({
+        content: messages.pt.success.registerServerSuccess,
+        flags: MessageFlags.Ephemeral,
+      })
+    );
   },
 };

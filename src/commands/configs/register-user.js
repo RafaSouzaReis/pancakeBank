@@ -2,10 +2,12 @@ const { SlashCommandBuilder, MessageFlags } = require("discord.js");
 const User = require("../../database/models/userschema");
 const Guild = require("../../database/models/guildschema");
 const {
-  InGuild,
-  GuildExist,
-} = require("../../services/verifications/guild-check");
-const { UserExist } = require("../../services/verifications/user-check");
+  isInGuild,
+  isGuildExist,
+} = require("../../helpers/guards/guild-verification");
+const { isUserCheck } = require("../../helpers/guards/user-verification");
+const messages = require("../../i18n/messages");
+const wrapInteraction = require("../../helpers/wrappers/wrap-interaction");
 
 module.exports = {
   cooldown: 5,
@@ -13,19 +15,19 @@ module.exports = {
     .setName("register-user")
     .setDescription("Register User"),
   async execute(interaction) {
-    if (!(await InGuild(interaction))) {
+    if (!(await isInGuild(interaction))) {
       return;
     }
 
     const server = await Guild.findOne({ guildId: interaction.guild.id });
-    if (!GuildExist(interaction, server)) {
+    if (!isGuildExist(interaction, server)) {
       return;
     }
 
     const user = await User.findOne({
       userId: interaction.user.id,
     });
-    if (UserExist(interaction, user)) {
+    if (isUserCheck(interaction, user)) {
       return;
     }
 
@@ -36,9 +38,11 @@ module.exports = {
 
     await newUser.save();
 
-    await interaction.reply({
-      content: `Registro feito com sucesso!`,
-      flags: MessageFlags.Ephemeral,
-    });
+    await wrapInteraction(interaction, (i) =>
+      i.reply({
+        content: messages.pt.success.registerUserSuccess,
+        flags: MessageFlags.Ephemeral,
+      })
+    );
   },
 };

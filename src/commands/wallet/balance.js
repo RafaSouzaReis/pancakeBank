@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const Decimal = require("decimal.js");
-const { GuildExist, UserExist, InGuild } = require("../../services/export");
+const { isGuildExist, UserExist, isInGuild } = require("../../services/export");
 
 module.exports = {
   cooldown: 5,
@@ -9,11 +9,11 @@ module.exports = {
     .setDescription("Ver saldo"),
 
   async execute(interaction) {
-    const inGuild = await InGuild(interaction);
-    if (!inGuild) {
+    const isInGuild = await isInGuild(interaction);
+    if (!isInGuild) {
       return;
     }
-    const server = await GuildExist(interaction);
+    const server = await isGuildExist(interaction);
     if (!server) {
       return;
     }

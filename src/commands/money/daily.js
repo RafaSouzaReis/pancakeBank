@@ -2,11 +2,13 @@ const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const User = require("../../database/models/userschema");
 const Guild = require("../../database/models/guildschema");
 const {
-  InGuild,
-  GuildExist,
-} = require("../../services/verifications/guild-check");
-const { UserExist } = require("../../services/verifications/user-check");
-const AlreadyClaimed = require("../../services/verifications/daily-check");
+  isInGuild,
+  isGuildExist,
+} = require("../../helpers/guards/guild-verification");
+const { isUserCheck } = require("../../helpers/guards/user-verification");
+const isDailyAlreadyClaimed =
+  require("../../helpers/guards/daily-verification").isDailyAlreadyClaimed;
+const wrapInteraction = require("../../helpers/wrappers/wrap-interaction");
 const CalculeBalanceLogic = require("../../logic/calc-balance-logic");
 const LootLogic = require("../../logic/loot-logic");
 
@@ -16,19 +18,19 @@ module.exports = {
     .setName("daily")
     .setDescription("Receba o premio diario"),
   async execute(interaction) {
-    if (!(await InGuild(interaction))) {
+    if (!(await isInGuild(interaction))) {
       return;
     }
 
     const server = await Guild.findOne({ guildId: interaction.guild.id });
-    if (!GuildExist(interaction, server)) {
+    if (!isGuildExist(interaction, server)) {
       return;
     }
 
     const user = await User.findOne({
       userId: interaction.user.id,
     });
-    if (UserExist(interaction, user)) {
+    if (isUserCheck(interaction, user)) {
       return;
     }
 
@@ -41,7 +43,7 @@ module.exports = {
     );
     const now = new Date();
 
-    if (!(await AlreadyClaimed(interaction, now))) {
+    if (!(await isDailyAlreadyClaimed(interaction, now))) {
       return;
     }
 
@@ -78,8 +80,10 @@ module.exports = {
       .setFooter({ text: `Banco do Servidor • ${interaction.guild.name}` })
       .setTimestamp();
 
-    await interaction.reply({
-      embeds: [embed],
-    });
+    await wrapInteraction(interaction, (i) =>
+      i.reply({
+        embeds: [embed],
+      })
+    );
   },
 };

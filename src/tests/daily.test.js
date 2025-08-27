@@ -5,10 +5,10 @@ jest.mock("discord.js", () => ({
 }));
 
 const {
-  InGuild,
-  AlreadyClaimed,
+  isInGuild,
+  isDailyAlreadyClaimed,
   UserExist,
-  GuildExist,
+  isGuildExist,
 } = require("../services/export");
 const mockInteraction = require("./utils/mock-interaction");
 const { EmbedBuilder } = require("discord.js");
@@ -18,19 +18,19 @@ const command = require("../commands/money/daily");
 describe("/daily", () => {
   beforeAll(() => {
     jest.clearAllMocks();
-    InGuild.mockResolvedValue(true);
-    AlreadyClaimed.mockResolvedValue(false);
+    isInGuild.mockResolvedValue(true);
+    isDailyAlreadyClaimed.mockResolvedValue(false);
     UserExist.mockResolvedValue(true);
-    GuildExist.mockResolvedValue(true);
+    isGuildExist.mockResolvedValue(true);
   });
 
   describe("Fluxo Principal", () => {
     test("Deve retornar com exito sem erro.", async () => {
       await command.execute(mockInteraction);
-      expect(InGuild).toHaveBeenCalledWith(mockInteraction);
-      expect(GuildExist).toHaveBeenLastCalledWith(mockInteraction);
+      expect(isInGuild).toHaveBeenCalledWith(mockInteraction);
+      expect(isGuildExist).toHaveBeenLastCalledWith(mockInteraction);
       expect(UserExist).toHaveBeenCalledWith(mockInteraction);
-      expect(AlreadyClaimed).toHaveBeenCalledWith(mockInteraction);
+      expect(isDailyAlreadyClaimed).toHaveBeenCalledWith(mockInteraction);
     });
   });
 });

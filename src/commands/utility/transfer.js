@@ -1,12 +1,12 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const Decimal = require("decimal.js");
 const {
-  GuildExist,
+  isGuildExist,
   UserExist,
-  InGuild,
-  ValueCheck,
+  isInGuild,
+  isValueValid,
   BalanceCheck,
-  TargetIsYou,
+  isTargetNotSelf,
   TargetExist,
 } = require("../../services/export");
 const CalculeBalanceLogic = require("../../logic/calc-balance-logic");
@@ -32,12 +32,12 @@ module.exports = {
     const target = interaction.options.getUser("target");
     const value = interaction.options.getNumber("valor");
 
-    const inGuild = await InGuild(interaction);
-    if (!inGuild) {
+    const isInGuild = await isInGuild(interaction);
+    if (!isInGuild) {
       return;
     }
 
-    const server = await GuildExist(interaction);
+    const server = await isGuildExist(interaction);
     if (!server) {
       return;
     }
@@ -52,11 +52,11 @@ module.exports = {
       return;
     }
 
-    if (TargetIsYou) {
+    if (isTargetNotSelf) {
       return;
     }
 
-    if (await ValueCheck(interaction, value)) {
+    if (await isValueValid(interaction, value)) {
       return;
     }
 

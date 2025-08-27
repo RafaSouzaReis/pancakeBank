@@ -2,11 +2,11 @@ const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const User = require("../../database/models/userschema");
 const Guild = require("../../database/models/guildschema");
 const {
-  InGuild,
-  GuildExist,
+  isInGuild,
+  isGuildExist,
 } = require("../../services/verifications/guild-check");
 const { UserExist } = require("../../services/verifications/user-check");
-const ReceivedZero = require("../../services/verifications/minecheck");
+const isReceivedZero = require("../../services/verifications/minecheck");
 const CalculeBalanceLogic = require("../../logic/calc-balance-logic");
 const LootLogic = require("../../logic/loot-logic");
 
@@ -14,12 +14,12 @@ module.exports = {
   cooldown: 30,
   data: new SlashCommandBuilder().setName("mine").setDescription("Miner coin"),
   async execute(interaction) {
-    if (!(await InGuild(interaction))) {
+    if (!(await isInGuild(interaction))) {
       return;
     }
 
     const server = await Guild.findOne({ guildId: interaction.guild.id });
-    if (!GuildExist(interaction, server)) {
+    if (!isGuildExist(interaction, server)) {
       return;
     }
 
@@ -39,7 +39,7 @@ module.exports = {
       ])
     );
 
-    if (await ReceivedZero(interaction, money)) {
+    if (await isReceivedZero(interaction, money)) {
       return;
     }
     const coin = server.coinName;
