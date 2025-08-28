@@ -11,6 +11,8 @@ const isDailyAlreadyClaimed =
 const wrapInteraction = require("../../helpers/wrappers/wrap-interaction");
 const CalculeBalanceLogic = require("../../logic/calc-balance-logic");
 const LootLogic = require("../../logic/loot-logic");
+const createDailyEmbed = require("../../bicep/embeds/daily-embed");
+const { default: translate } = require("../../i18n/translate");
 
 module.exports = {
   cooldown: 5,
@@ -21,7 +23,6 @@ module.exports = {
     if (!(await isInGuild(interaction))) {
       return;
     }
-
     const server = await Guild.findOne({ guildId: interaction.guild.id });
     if (!isGuildExist(interaction, server)) {
       return;
@@ -51,34 +52,15 @@ module.exports = {
     user.lastDaily = now;
     await user.save();
 
-    const embed = new EmbedBuilder()
-      .setColor("Gold")
-      .setTitle(":fortune_cookie:Daily:fortune_cookie:")
-      .setDescription(
-        `Voce recebeu em ${server.coinName} o valor:\n${
-          server.emojiRaw
-        }$${money.toFixed(2)}`
-      )
-      .addFields(
-        {
-          name: "Saldo Anterior:",
-          value: `${server.emojiRaw}$${currentBalance.toFixed(2)}`,
-          inline: true,
-        },
-        {
-          name: "\u200B",
-          value: "->",
-          inline: true,
-        },
-        {
-          name: "Saldo Atual:",
-          value: `${server.emojiRaw}$${balanceFormatted}`,
-          inline: true,
-        }
-      )
-      .setThumbnail(interaction.user.displayAvatarURL({ dynamic: true }))
-      .setFooter({ text: `Banco do Servidor • ${interaction.guild.name}` })
-      .setTimestamp();
+    createDailyEmbed();
+
+    const embed = createDailyEmbed(
+      interaction,
+      server,
+      currentBalance,
+      balanceFormatted,
+      money
+    );
 
     await wrapInteraction(interaction, (i) =>
       i.reply({

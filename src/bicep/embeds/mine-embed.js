@@ -1,30 +1,25 @@
 const { EmbedBuilder } = require("discord.js");
 const translate = require("../../i18n/translate");
 
-export default function createDailyEmbed(
+export default function createMineEmbed(
   interaction,
   server,
   currentBalance,
-  balanceFormatted,
-  money
+  balanceFormatted
 ) {
   return new EmbedBuilder()
     .setColor("Gold")
-    .setTitle(translate("pt", "daily.title"))
+    .setTitle(translate("pt", "mine.title"))
     .setDescription(
-      translate("pt", "daily.description", {
-        coiName: server.coinName,
+      translate("pt", "mine.description", {
+        coinName: server.coinName,
         emoji: server.emojiRaw,
-        amount: balanceFormatted,
+        amount: money,
       })
     )
     .addFields(
       {
-        name: translate("pt", "daily.previousBalance", {
-          coinName: server.coinName,
-          emoji: server.emojiRaw,
-          amount: money,
-        }),
+        name: translate("pt", "mine.previousBalance"),
         value: `${server.emojiRaw}$${currentBalance}`,
         inline: true,
       },
@@ -34,7 +29,7 @@ export default function createDailyEmbed(
         inline: true,
       },
       {
-        name: translate("pt", "daily.currentBalance"),
+        name: translate("pt", "mine.currentBalance"),
         value: `${server.emojiRaw}$${balanceFormatted}`,
         inline: true,
       }

@@ -7,8 +7,8 @@ module.exports = function CalculeBalanceLogic(user, money, loss = false) {
   const balanceFormatted = newBalance.toFixed(2);
 
   return {
-    currentBalance: currentBalance.toString(),
+    currentBalance: currentBalance.toFixed(2).toString(),
     balanceFormatted: balanceFormatted,
-    money: money.toString(),
+    money: money.toFixed(2).toString(),
   };
 };

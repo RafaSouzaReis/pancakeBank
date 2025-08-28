@@ -4,9 +4,12 @@ const Guild = require("../../database/models/guildschema");
 const {
   isInGuild,
   isGuildExist,
-} = require("../../services/verifications/guild-check");
-const { UserExist } = require("../../services/verifications/user-check");
-const isReceivedZero = require("../../services/verifications/minecheck");
+} = require("../../helpers/guards/guild-verification");
+const {
+  isUserCheck,
+  isReceivedZero,
+} = require("../../helpers/guards/user-verification");
+const createMineEmbed = require("../../bicep/embeds/mine-embed");
 const CalculeBalanceLogic = require("../../logic/calc-balance-logic");
 const LootLogic = require("../../logic/loot-logic");
 
@@ -26,7 +29,7 @@ module.exports = {
     const user = await User.findOne({
       userId: interaction.user.id,
     });
-    if (UserExist(interaction, user)) {
+    if (isUserCheck(interaction, user)) {
       return;
     }
 
@@ -46,32 +49,13 @@ module.exports = {
     const emoji = server.emojiRaw;
     await user.save();
 
-    const embed = new EmbedBuilder()
-      .setColor("Gold")
-      .setTitle(":moneybag:Miner:moneybag: ")
-      .setDescription(
-        `Voce mineirou em ${coin} o valor:\n${emoji}$${received.toFixed(2)}`
-      )
-      .addFields(
-        {
-          name: "Saldo Anterior:",
-          value: `${emoji}$${currentBalance.toFixed(2)}`,
-          inline: true,
-        },
-        {
-          name: "\u200B",
-          value: "->",
-          inline: true,
-        },
-        {
-          name: "Saldo Atual:",
-          value: `${emoji}$${newBalanceFormatted}`,
-          inline: true,
-        }
-      )
-      .setThumbnail(interaction.user.displayAvatarURL({ dynamic: true }))
-      .setFooter({ text: `Banco do Servidor • ${interaction.guild.name}` })
-      .setTimestamp();
+    const embed = createMineEmbed(
+      interaction,
+      server,
+      currentBalance,
+      balanceFormatted,
+      money
+    );
 
     interaction.reply({ embeds: [embed] });
   },

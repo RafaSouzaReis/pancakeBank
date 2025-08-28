@@ -1,14 +1,15 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const Decimal = require("decimal.js");
 const {
-  isGuildExist,
-  UserExist,
   isInGuild,
-  isValueValid,
-  BalanceCheck,
+  isGuildExist,
+} = require("../../helpers/guards/guild-verification");
+const {
+  isUserCheck,
   isTargetNotSelf,
-  TargetExist,
-} = require("../../services/export");
+  isValueValid,
+} = require("../../helpers/guards/user-verification");
+const createTransferEmbed = require("../../bicep/embeds/transfer-embed");
 const CalculeBalanceLogic = require("../../logic/calc-balance-logic");
 
 module.exports = {
@@ -32,35 +33,34 @@ module.exports = {
     const target = interaction.options.getUser("target");
     const value = interaction.options.getNumber("valor");
 
-    const isInGuild = await isInGuild(interaction);
-    if (!isInGuild) {
+    if (!(await isInGuild(interaction))) {
       return;
     }
 
-    const server = await isGuildExist(interaction);
-    if (!server) {
+    const server = await Guild.findOne({ guildId: interaction.guild.id });
+    if (!isGuildExist(interaction, server)) {
       return;
     }
 
-    const user = await UserExist(interaction, target);
-    if (!user) {
+    const user = await User.findOne({
+      userId: interaction.user.id,
+    });
+    if (isUserCheck(interaction, user)) {
       return;
     }
 
-    const targetUser = TargetExist(target);
-    if (!targetUser) {
+    const targetUser = await User.findOne({
+      userId: target.id,
+    });
+    if (isUserCheck(interaction, targetUser)) {
       return;
     }
 
-    if (isTargetNotSelf) {
+    if (isTargetNotSelf(interaction, user, targetUser)) {
       return;
     }
 
     if (await isValueValid(interaction, value)) {
-      return;
-    }
-
-    if (await BalanceCheck(interaction, user, value)) {
       return;
     }
 
@@ -83,50 +83,16 @@ module.exports = {
     await user.save();
     await targetUser.save();
 
-    const embed = new EmbedBuilder()
-      .setColor("Gold")
-      .setTitle(":money_with_wings: Transferência Realizada :money_with_wings:")
-      .setDescription(
-        `Você transferiu **${emoji}$${value.toFixed(2)} ${coin}** para **${
-          target.username
-        }**.`
-      )
-      .addFields(
-        {
-          name: "Seu Saldo Anterior:",
-          value: `${emoji}$${currentBalanceDecimalUser.toFixed(2)}`,
-          inline: true,
-        },
-        {
-          name: "\u200B",
-          value: "→",
-          inline: true,
-        },
-        {
-          name: "Seu Saldo Atual:",
-          value: `${emoji}$${newBalanceDecimalUserFormatted}`,
-          inline: true,
-        },
-        { name: "\u200B", value: "\u200B", inline: false },
-        {
-          name: `Saldo Anterior de ${target.username}:`,
-          value: `${emoji}$${currentBalanceDecimalTarget.toFixed(2)}`,
-          inline: true,
-        },
-        {
-          name: "\u200B",
-          value: "→",
-          inline: true,
-        },
-        {
-          name: `Saldo Atual de ${target.username}:`,
-          value: `${emoji}$${newBalanceDecimalTargetFormatted}`,
-          inline: true,
-        }
-      )
-      .setThumbnail(emojiURL)
-      .setFooter({ text: `Banco do Servidor • ${interaction.guild.name}` })
-      .setTimestamp();
+    const embed = createTransferEmbed(
+      interaction,
+      server,
+      money,
+      currentBalance,
+      balanceFormatted,
+      targetUser,
+      currentBalanceTarget,
+      balanceFormattedTarget
+    );
 
     interaction.reply({ embeds: [embed] });
   },
