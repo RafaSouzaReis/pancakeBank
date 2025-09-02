@@ -32,5 +32,11 @@ export const messages = {
       currentBalanceTarget: "Saldo Atual de {target}:",
       footer: "Banco do Servidor • {guildName}",
     },
+    balance: {
+      title: ":coin:  Saldo de {userName}! :coin:",
+      description: "Veja abaixo o saldo atual em {coin}",
+      fieldName: "Saldo",
+      footer: "Banco do Servidor • {guildName}",
+    },
   },
 };
