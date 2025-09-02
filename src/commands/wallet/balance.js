@@ -33,8 +33,10 @@ module.exports = {
     const balanceFormatted = balanceDecimal.toFixed(2);
 
     const embed = createBalanceEmbed(interaction, server, balanceFormatted);
-    await interaction.reply({
-      embeds: [embed],
-    });
+    await wrapInteraction(interaction, (i) =>
+      i.reply({
+        embeds: [embed],
+      })
+    );
   },
 };

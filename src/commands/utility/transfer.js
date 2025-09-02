@@ -94,6 +94,10 @@ module.exports = {
       balanceFormattedTarget
     );
 
-    interaction.reply({ embeds: [embed] });
+    await wrapInteraction(interaction, (i) =>
+      i.reply({
+        embeds: [embed],
+      })
+    );
   },
 };

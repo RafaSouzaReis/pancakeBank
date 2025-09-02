@@ -7,7 +7,7 @@ const {
 } = require("../../helpers/guards/guild-verification");
 const { isUserCheck } = require("../../helpers/guards/user-verification");
 const messages = require("../../i18n/messages");
-const wrapInteraction = require("../../helpers/wrappers/wrap-interaction");
+const wrapInteraction = require("../../helpers/middleware/wrappers/wrap-interaction");
 
 module.exports = {
   cooldown: 5,

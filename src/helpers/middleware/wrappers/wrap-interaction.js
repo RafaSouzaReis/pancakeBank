@@ -1,4 +1,5 @@
 const messages = require("../i18n/messages");
+const translate = require("../../i18n/translate");
 
 module.exports = async function wrapInteraction(interaction, callBack) {
   try {
@@ -6,7 +7,9 @@ module.exports = async function wrapInteraction(interaction, callBack) {
   } catch (error) {
     console.error("Error occurred while processing interaction:", error);
     await interaction.reply({
-      content: messages.pt.errors.errorProcessingRequest,
+      content: translate("pt", "errors.errorProcessingRequest", {
+        command: interaction.commandName,
+      }),
       flags: MessageFlags.ephemeral,
     });
   }

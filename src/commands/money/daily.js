@@ -8,7 +8,7 @@ const {
 const { isUserCheck } = require("../../helpers/guards/user-verification");
 const isDailyAlreadyClaimed =
   require("../../helpers/guards/daily-verification").isDailyAlreadyClaimed;
-const wrapInteraction = require("../../helpers/wrappers/wrap-interaction");
+const wrapInteraction = require("../../helpers/middleware/wrappers/wrap-interaction");
 const CalculeBalanceLogic = require("../../logic/calc-balance-logic");
 const LootLogic = require("../../logic/loot-logic");
 const createDailyEmbed = require("../../bicep/embeds/daily-embed");

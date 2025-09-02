@@ -1,8 +1,7 @@
 const messages = {
   pt: {
     errors: {
-      errorProcessingRequest:
-        "❌ Ocorreu um erro ao processar sua solicitação.",
+      errorProcessingRequest: "❌ Ocorreu um erro ao executar o {command}",
     },
     success: {
       registerUserSuccess: "✅ Usuario registrado feito com sucesso!",
