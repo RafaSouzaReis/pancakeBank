@@ -1,4 +1,4 @@
-export const messages = {
+const messages = {
   pt: {
     errors: {
       errorProcessingRequest:
@@ -40,3 +40,5 @@ export const messages = {
     },
   },
 };
+
+module.exports = messages;

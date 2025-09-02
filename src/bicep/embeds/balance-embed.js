@@ -1,7 +1,7 @@
 const { EmbedBuilder } = require("discord.js");
 const translate = require("../../i18n/translate");
 
-export default function createBalanceEmbed(
+module.exports = function createBalanceEmbed(
   interaction,
   server,
   balanceFormatted
@@ -26,4 +26,4 @@ export default function createBalanceEmbed(
       }),
     })
     .setTimestamp();
-}
+};

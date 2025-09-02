@@ -1,7 +1,7 @@
 const { EmbedBuilder } = require("discord.js");
 const translate = require("../../i18n/translate");
 
-export default function createTransferEmbed(
+module.exports = function createTransferEmbed(
   interaction,
   server,
   money,
@@ -66,4 +66,4 @@ export default function createTransferEmbed(
       }),
     })
     .setTimestamp();
-}
+};

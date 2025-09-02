@@ -1,6 +1,6 @@
 const messages = require("./messages");
 
-export default function translate(lang, key, vars = {}) {
+module.exports = function translate(lang, key, vars = {}) {
   const keys = key.split(".");
 
   let text = messages[lang];
@@ -15,4 +15,4 @@ export default function translate(lang, key, vars = {}) {
   return Object.keys(vars).reduce((acc, curr) => {
     return acc.replaceAll(`{${curr}}`, vars[curr]);
   }, text);
-}
+};

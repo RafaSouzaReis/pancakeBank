@@ -1,6 +1,6 @@
 const messages = require("../i18n/messages");
 
-async function wrapInteraction(interaction, callBack) {
+module.exports = async function wrapInteraction(interaction, callBack) {
   try {
     await callBack(interaction);
   } catch (error) {
@@ -10,4 +10,4 @@ async function wrapInteraction(interaction, callBack) {
       flags: MessageFlags.ephemeral,
     });
   }
-}
+};
