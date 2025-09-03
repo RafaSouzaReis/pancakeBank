@@ -3,9 +3,12 @@ const messages = {
     errors: {
       errorProcessingRequest: "❌ Ocorreu um erro ao executar o {command}",
     },
-    success: {
-      registerUserSuccess: "✅ Usuario registrado feito com sucesso!",
-      registerServerSuccess: "✅ Servidor registrado feito com sucesso!",
+    user: {
+      userCheck: "✅ Usuario já registrado!",
+      userNotCheck:
+        "❌ Usuario não registrado, por favor use `/register-user` para se registrar!",
+      userTarget: "❌ Usuario alvo não encontrado!",
+      userTargetSelf: "❌ Você não pode fazer uma transferência para si mesmo.",
     },
     daily: {
       title: ":fortune_cookie: Daily :fortune_cookie:",

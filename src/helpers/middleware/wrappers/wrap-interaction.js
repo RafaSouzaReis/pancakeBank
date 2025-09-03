@@ -1,5 +1,4 @@
-const messages = require("../i18n/messages");
-const translate = require("../../i18n/translate");
+const translate = require("../../../i18n/translate");
 
 module.exports = async function wrapInteraction(interaction, callBack) {
   try {

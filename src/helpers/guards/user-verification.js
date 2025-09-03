@@ -1,4 +1,5 @@
 const { MessageFlags } = require("discord.js");
+const translate = require("../../i18n/translate");
 
 async function isUserCheck(interaction, user, message) {
   if (user) {

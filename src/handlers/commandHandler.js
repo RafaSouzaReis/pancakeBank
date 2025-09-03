@@ -1,6 +1,4 @@
-const fs = require("node:fs");
-const path = require("node:path");
-const loadingCommands = require("../util/loadingCommands");
+const loadingCommands = require("../scripts/loadingCommands");
 const client = require("../configs/client");
 
 module.exports = (Client) => {

@@ -1,18 +1,21 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
+
 const User = require("../../database/models/userschema");
 const Guild = require("../../database/models/guildschema");
+
 const {
   isInGuild,
   isGuildExist,
 } = require("../../helpers/guards/guild-verification");
 const { isUserCheck } = require("../../helpers/guards/user-verification");
-const isDailyAlreadyClaimed =
-  require("../../helpers/guards/daily-verification").isDailyAlreadyClaimed;
+const isDailyAlreadyClaimed = require("../../helpers/guards/daily-verification");
+
 const wrapInteraction = require("../../helpers/middleware/wrappers/wrap-interaction");
-const CalculeBalanceLogic = require("../../logic/calc-balance-logic");
-const LootLogic = require("../../logic/loot-logic");
+
+const CalculeBalanceLogic = require("../../services/calc-balance-logic");
+const LootLogic = require("../../services/loot-logic");
+
 const createDailyEmbed = require("../../bicep/embeds/daily-embed");
-const { default: translate } = require("../../i18n/translate");
 
 module.exports = {
   cooldown: 5,

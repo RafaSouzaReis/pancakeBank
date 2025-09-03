@@ -1,7 +1,6 @@
 const { REST, Routes } = require("discord.js");
 require("dotenv").config();
-const fs = require("node:fs");
-const path = require("node:path");
+
 const loadingCommands = require("./loadingCommands");
 
 const commands = loadingCommands().map((element) => element.data.toJSON());

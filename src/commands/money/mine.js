@@ -1,6 +1,8 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
+
 const User = require("../../database/models/userschema");
 const Guild = require("../../database/models/guildschema");
+
 const {
   isInGuild,
   isGuildExist,
@@ -9,9 +11,13 @@ const {
   isUserCheck,
   isReceivedZero,
 } = require("../../helpers/guards/user-verification");
+
 const createMineEmbed = require("../../bicep/embeds/mine-embed");
-const CalculeBalanceLogic = require("../../logic/calc-balance-logic");
-const LootLogic = require("../../logic/loot-logic");
+
+const CalculeBalanceLogic = require("../../services/calc-balance-logic");
+const LootLogic = require("../../services/loot-logic");
+
+const wrapInteraction = require("../../helpers/middleware/wrappers/wrap-interaction");
 
 module.exports = {
   cooldown: 30,

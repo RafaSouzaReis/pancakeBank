@@ -10,7 +10,9 @@ const {
   isValueValid,
 } = require("../../helpers/guards/user-verification");
 const createTransferEmbed = require("../../bicep/embeds/transfer-embed");
-const CalculeBalanceLogic = require("../../logic/calc-balance-logic");
+const CalculeBalanceLogic = require("../../services/calc-balance-logic");
+
+const wrapInteraction = require("../../helpers/middleware/wrappers/wrap-interaction");
 
 module.exports = {
   cooldown: 5,

@@ -1,6 +1,14 @@
-const { SlashCommandBuilder, MessageFlags } = require("discord.js");
-const fs = require("node:fs");
-const path = require("node:path");
+const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
+const Decimal = require("decimal.js");
+
+const User = require("../../database/models/userschema");
+const Guild = require("../../database/models/guildschema");
+
+const {
+  isInGuild,
+  isGuildExist,
+} = require("../../helpers/guards/guild-verification");
+const { isUserCheck } = require("../../helpers/guards/user-verification");
 
 module.exports = {
   data: new SlashCommandBuilder()
