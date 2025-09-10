@@ -1,44 +1,53 @@
 const { MessageFlags } = require("discord.js");
+const wrapInteraction = require("../middleware/wrappers/wrap-interaction");
 
 async function isGuildExist(interaction, server, message) {
   if (!server) {
-    await interaction.reply({
-      content: message,
-      flags: MessageFlags.ephemeral,
-    });
+    await wrapInteraction(interaction, (i) =>
+      i.reply({
+        content: message,
+        flags: MessageFlags.ephemeral,
+      })
+    );
     return false;
   }
   return true;
 }
 
-async function isInGuild(interaction) {
+async function isInGuild(interaction, message) {
   if (!interaction.inGuild()) {
-    await interaction.reply({
-      content: "❌ Este comando só pode ser executado dentro de um servidor.",
-      flags: MessageFlags.ephemeral,
-    });
+    await wrapInteraction(interaction, (i) =>
+      i.reply({
+        content: message,
+        flags: MessageFlags.ephemeral,
+      })
+    );
     return false;
   }
   return true;
 }
 
-async function isAdmin(interaction) {
+async function isAdmin(interaction, message) {
   if (!interaction.member.permissions.has("Administrator")) {
-    await interaction.reply({
-      content: "❌ Apenas administradores podem usar este comando.",
-      flags: MessageFlags.ephemeral,
-    });
+    await wrapInteraction(interaction, (i) =>
+      i.reply({
+        content: message,
+        flags: MessageFlags.ephemeral,
+      })
+    );
     return false;
   }
   return true;
 }
 
-async function isEmojiValid(emojiMatch, interaction) {
+async function isEmojiValid(emojiMatch, interaction, message) {
   if (!emojiMatch) {
-    await interaction.reply({
-      content: `Emoji Inválido, Por favor utilize um emoji personalizado do servidor!`,
-      flags: MessageFlags.ephemeral,
-    });
+    await wrapInteraction(interaction, (i) =>
+      i.reply({
+        content: message,
+        flags: MessageFlags.ephemeral,
+      })
+    );
     return false;
   }
   return true;

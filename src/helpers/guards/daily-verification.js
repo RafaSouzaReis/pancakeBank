@@ -1,6 +1,13 @@
 const { MessageFlags } = require("discord.js");
+const wrapInteraction = require("../middleware/wrappers/wrap-interaction");
 
-async function isDailyAlreadyClaimed(interaction, now, user, mode = "24h") {
+async function isDailyAlreadyClaimed(
+  interaction,
+  now,
+  user,
+  mode = "24h",
+  message
+) {
   let alreadyClaimed = false;
 
   if (user.lastDaily) {
@@ -12,10 +19,12 @@ async function isDailyAlreadyClaimed(interaction, now, user, mode = "24h") {
   }
 
   if (alreadyClaimed) {
-    await interaction.reply({
-      content: "Você já coletou sua recompensa, tente amanhã!",
-      flags: MessageFlags.ephemeral,
-    });
+    await wrapInteraction(interaction, (i) =>
+      i.reply({
+        content: message,
+        flags: MessageFlags.ephemeral,
+      })
+    );
     return false;
   }
   return true;

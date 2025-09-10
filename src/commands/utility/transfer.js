@@ -7,8 +7,8 @@ const {
 const {
   isUserCheck,
   isTargetNotSelf,
-  isValueValid,
 } = require("../../helpers/guards/user-verification");
+const { isValueValid } = require("../../helpers/guards/balance-verification");
 const createTransferEmbed = require("../../bicep/embeds/transfer-embed");
 const CalculeBalanceLogic = require("../../services/calc-balance-logic");
 

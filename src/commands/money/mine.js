@@ -7,10 +7,8 @@ const {
   isInGuild,
   isGuildExist,
 } = require("../../helpers/guards/guild-verification");
-const {
-  isUserCheck,
-  isReceivedZero,
-} = require("../../helpers/guards/user-verification");
+const { isUserCheck } = require("../../helpers/guards/user-verification");
+const { isReceivedZero } = require("../../helpers/guards/balance-verification");
 
 const createMineEmbed = require("../../bicep/embeds/mine-embed");
 
