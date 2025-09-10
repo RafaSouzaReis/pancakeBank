@@ -6,7 +6,7 @@ const {
   isGuildExist,
 } = require("../../helpers/guards/guild-verification");
 const { isUserCheck } = require("../../helpers/guards/user-verification");
-const messages = require("../../i18n/messages");
+const translate = require("../../i18n/translate");
 const wrapInteraction = require("../../helpers/middleware/wrappers/wrap-interaction");
 
 module.exports = {
@@ -15,12 +15,16 @@ module.exports = {
     .setName("register-user")
     .setDescription("Register User"),
   async execute(interaction) {
-    if (!(await isInGuild(interaction))) {
+    if (
+      !(await isInGuild(interaction, translate("pt", "guild.guildInGuild")))
+    ) {
       return;
     }
 
     const server = await Guild.findOne({ guildId: interaction.guild.id });
-    if (!isGuildExist(interaction, server)) {
+    if (
+      !isGuildExist(interaction, server, translate("pt", "guild.guildNotCheck"))
+    ) {
       return;
     }
 
@@ -40,7 +44,7 @@ module.exports = {
 
     await wrapInteraction(interaction, (i) =>
       i.reply({
-        content: messages.pt.success.registerUserSuccess,
+        content: translate("pt", "user.userRegisterSuccess"),
         flags: MessageFlags.Ephemeral,
       })
     );

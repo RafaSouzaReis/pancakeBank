@@ -9,9 +9,9 @@ module.exports = function createMineEmbed(
 ) {
   return new EmbedBuilder()
     .setColor("Gold")
-    .setTitle(translate("pt", "mine.title"))
+    .setTitle(translate("pt", "mineEmbed.title"))
     .setDescription(
-      translate("pt", "mine.description", {
+      translate("pt", "mineEmbed.description", {
         coinName: server.coinName,
         emoji: server.emojiRaw,
         amount: money,
@@ -19,7 +19,7 @@ module.exports = function createMineEmbed(
     )
     .addFields(
       {
-        name: translate("pt", "mine.previousBalance"),
+        name: translate("pt", "mineEmbed.previousBalance"),
         value: `${server.emojiRaw}$${currentBalance}`,
         inline: true,
       },
@@ -29,14 +29,14 @@ module.exports = function createMineEmbed(
         inline: true,
       },
       {
-        name: translate("pt", "mine.currentBalance"),
+        name: translate("pt", "mineEmbed.currentBalance"),
         value: `${server.emojiRaw}$${balanceFormatted}`,
         inline: true,
       }
     )
     .setThumbnail(interaction.user.displayAvatarURL({ dynamic: true }))
     .setFooter({
-      text: translate("pt", "daily.footer", {
+      text: translate("pt", "mineEmbed.footer", {
         guildName: interaction.guild.name,
       }),
     })

@@ -10,9 +10,9 @@ module.exports = function createDailyEmbed(
 ) {
   return new EmbedBuilder()
     .setColor("Gold")
-    .setTitle(translate("pt", "daily.title"))
+    .setTitle(translate("pt", "dailyEmbed.title"))
     .setDescription(
-      translate("pt", "daily.description", {
+      translate("pt", "dailyEmbed.description", {
         coiName: server.coinName,
         emoji: server.emojiRaw,
         amount: balanceFormatted,
@@ -20,7 +20,7 @@ module.exports = function createDailyEmbed(
     )
     .addFields(
       {
-        name: translate("pt", "daily.previousBalance", {
+        name: translate("pt", "dailyEmbed.previousBalance", {
           coinName: server.coinName,
           emoji: server.emojiRaw,
           amount: money,
@@ -34,14 +34,14 @@ module.exports = function createDailyEmbed(
         inline: true,
       },
       {
-        name: translate("pt", "daily.currentBalance"),
+        name: translate("pt", "dailyEmbed.currentBalance"),
         value: `${server.emojiRaw}$${balanceFormatted}`,
         inline: true,
       }
     )
     .setThumbnail(interaction.user.displayAvatarURL({ dynamic: true }))
     .setFooter({
-      text: translate("pt", "daily.footer", {
+      text: translate("pt", "dailyEmbed.footer", {
         guildName: interaction.guild.name,
       }),
     })

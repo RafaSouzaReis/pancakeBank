@@ -13,9 +13,9 @@ module.exports = function createTransferEmbed(
 ) {
   return new EmbedBuilder()
     .setColor("Gold")
-    .setTitle(translate("pt", "transfer.title"))
+    .setTitle(translate("pt", "transferEmbed.title"))
     .setDescription(
-      translate("pt", "transfer.description", {
+      translate("pt", "transferEmbed.description", {
         emoji: server.emojiRaw,
         amount: money,
         coinName: server.coinName,
@@ -24,7 +24,7 @@ module.exports = function createTransferEmbed(
     )
     .addFields(
       {
-        name: translate("pt", "transfer.previousBalance"),
+        name: translate("pt", "transferEmbed.previousBalance"),
         value: `${server.emojiRaw}$${currentBalance}`,
         inline: true,
       },
@@ -34,13 +34,13 @@ module.exports = function createTransferEmbed(
         inline: true,
       },
       {
-        name: translate("pt", "transfer.currentBalance"),
+        name: translate("pt", "transferEmbed.currentBalance"),
         value: `${server.emojiRaw}$${balanceFormatted}`,
         inline: true,
       },
       { name: "\u200B", value: "\u200B", inline: false },
       {
-        name: translate("pt", "transfer.previousBalanceTarget", {
+        name: translate("pt", "transferEmbed.previousBalanceTarget", {
           target: targetUser.username,
         }),
         value: `${server.emojiRaw}$${currentBalanceTarget}`,
@@ -52,7 +52,7 @@ module.exports = function createTransferEmbed(
         inline: true,
       },
       {
-        name: translate("pt", "transfer.currentBalanceTarget", {
+        name: translate("pt", "transferEmbed.currentBalanceTarget", {
           target: targetUser.username,
         }),
         value: `${server.emojiRaw}$${balanceFormattedTarget}`,
@@ -61,7 +61,7 @@ module.exports = function createTransferEmbed(
     )
     .setThumbnail(server.emojiURL)
     .setFooter({
-      text: translate("pt", "daily.footer", {
+      text: translate("pt", "transferEmbed.footer", {
         guildName: interaction.guild.name,
       }),
     })

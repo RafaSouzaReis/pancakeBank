@@ -11,6 +11,7 @@ const messages = {
       userTargetSelf: "❌ Você não pode fazer uma transferência para si mesmo.",
     },
     guild: {
+      guildRegisterSuccess: "✅ Servidor registrado com sucesso!",
       guildCheck: "✅ Servidor já registrado!",
       guildNotCheck:
         "❌ Servidor não registrado, por favor use `/register` para registrar o servidor!",
