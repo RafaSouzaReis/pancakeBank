@@ -1,12 +1,12 @@
 const { SlashCommandBuilder, MessageFlags } = require("discord.js");
 const Guild = require("../../database/models/guildschema");
 const {
-  isInGuild,
-  isEmojiValid,
-  isAdmin,
+  isInNotGuild,
+  isEmojiNotValid,
+  isNotAdmin,
   isGuildExist,
 } = require("../../helpers/guards/guild-verification");
-const messages = require("../../i18n/messages");
+const translate = require("../../i18n/translate");
 const wrapInteraction = require("../../helpers/middleware/wrappers/wrap-interaction");
 
 module.exports = {
@@ -37,7 +37,9 @@ module.exports = {
     ),
 
   async execute(interaction) {
-    if (!(await isInGuild(interaction))) {
+    if (
+      await isInNotGuild(interaction, translate("pt", "guild.guildInNotGuild"))
+    ) {
       return;
     }
 
@@ -45,11 +47,17 @@ module.exports = {
     const emojiMatch = emoji.match(/.*?:.*?:(\d+)/);
     const regexGif = /^<a?:[a-zA-Z0-9_]+:\d+>$/;
 
-    if (!(await isEmojiValid(emojiMatch, interaction))) {
+    if (
+      await isEmojiNotValid(
+        interaction,
+        emojiMatch,
+        translate("pt", "guild.guildEmojiNotValid")
+      )
+    ) {
       return;
     }
 
-    if (!(await isAdmin(interaction))) {
+    if (await isNotAdmin(interaction, translate("pt", "guild.guildAdmin"))) {
       return;
     }
 
@@ -59,7 +67,13 @@ module.exports = {
     }`;
 
     const server = await Guild.findOne({ guildId: interaction.guild.id });
-    if (!isGuildExist(interaction, server)) {
+    if (
+      await isGuildExist(
+        interaction,
+        server,
+        translate("pt", "guild.guildExist")
+      )
+    ) {
       return;
     }
 

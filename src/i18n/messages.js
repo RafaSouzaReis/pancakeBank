@@ -1,24 +1,30 @@
+const balanceEmbed = require("../bicep/embeds/balance-embed");
+const dailyEmbed = require("../bicep/embeds/daily-embed");
+const mineEmbed = require("../bicep/embeds/mine-embed");
+const transferEmbed = require("../bicep/embeds/transfer-embed");
+
 const messages = {
   pt: {
     errors: {
       errorProcessingRequest: "❌ Ocorreu um erro ao executar o {command}",
     },
     user: {
-      userCheck: "✅ Usuario já registrado!",
-      userNotCheck:
+      userRegisterSuccess: "✅ Usuario registrado com sucesso!",
+      userExist: "✅ Usuario já registrado!",
+      userNotExist:
         "❌ Usuario não registrado, por favor use `/register-user` para se registrar!",
-      userTarget: "❌ Usuario alvo não encontrado!",
+      userTargetNotExist: "❌ Usuario alvo não encontrado!",
       userTargetSelf: "❌ Você não pode fazer uma transferência para si mesmo.",
     },
     guild: {
       guildRegisterSuccess: "✅ Servidor registrado com sucesso!",
-      guildCheck: "✅ Servidor já registrado!",
-      guildNotCheck:
+      guildExist: "✅ Servidor já registrado!",
+      guildNotExist:
         "❌ Servidor não registrado, por favor use `/register` para registrar o servidor!",
-      guildInGuild:
+      guildInNotGuild:
         "❌ Este comando só pode ser executado dentro de um servidor.",
       guildAdmin: "❌ Apenas administradores podem usar este comando.",
-      guildEmojiValid:
+      guildEmojiNotValid:
         "❌ Emoji Inválido, Por favor utilize um emoji personalizado do servidor!",
     },
     daily: {
@@ -28,22 +34,23 @@ const messages = {
       balanceValueValid: "❌ O valor deve ser maior que zero!",
       balanceReceivedZero:
         "⛏️ Nada foi encontrado desta vez... tente novamente mais tarde!",
+      balanceCheck: "❌ Saldo insuficiente para completar esta ação!",
     },
-    daily: {
+    dailyEmbed: {
       title: ":fortune_cookie: Daily :fortune_cookie:",
       description: "Você recebeu em {coinName} o valor:\n{emoji}${amount}",
       previousBalance: "Saldo Anterior:",
       currentBalance: "Saldo Atual:",
       footer: "Banco do Servidor • {guildName}",
     },
-    mine: {
+    mineEmbed: {
       title: ":pick: Mine :pick:",
       description: "Você mineirou em {coinName} o valor:\n{emoji}${amount}",
       previousBalance: "Saldo Anterior:",
       currentBalance: "Saldo Atual:",
       footer: "Banco do Servidor • {guildName}",
     },
-    transfer: {
+    transferEmbed: {
       title: ":money_with_wings: Transferência Realizada :money_with_wings:",
       description:
         "Você transferiu **{emoji}${amount} {coinName}** para **{target}**.",
@@ -53,7 +60,7 @@ const messages = {
       currentBalanceTarget: "Saldo Atual de {target}:",
       footer: "Banco do Servidor • {guildName}",
     },
-    balance: {
+    balanceEmbed: {
       title: ":coin:  Saldo de {userName}! :coin:",
       description: "Veja abaixo o saldo atual em {coin}",
       fieldName: "Saldo",

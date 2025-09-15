@@ -9,12 +9,12 @@ async function isGuildExist(interaction, server, message) {
         flags: MessageFlags.ephemeral,
       })
     );
-    return false;
+    return true;
   }
-  return true;
+  return false;
 }
 
-async function isInGuild(interaction, message) {
+async function isInNotGuild(interaction, message) {
   if (!interaction.inGuild()) {
     await wrapInteraction(interaction, (i) =>
       i.reply({
@@ -22,12 +22,12 @@ async function isInGuild(interaction, message) {
         flags: MessageFlags.ephemeral,
       })
     );
-    return false;
+    return true;
   }
-  return true;
+  return false;
 }
 
-async function isAdmin(interaction, message) {
+async function isNotAdmin(interaction, message) {
   if (!interaction.member.permissions.has("Administrator")) {
     await wrapInteraction(interaction, (i) =>
       i.reply({
@@ -35,12 +35,12 @@ async function isAdmin(interaction, message) {
         flags: MessageFlags.ephemeral,
       })
     );
-    return false;
+    return true;
   }
-  return true;
+  return false;
 }
 
-async function isEmojiValid(emojiMatch, interaction, message) {
+async function isEmojiNotValid(interaction, emojiMatch, message) {
   if (!emojiMatch) {
     await wrapInteraction(interaction, (i) =>
       i.reply({
@@ -48,14 +48,14 @@ async function isEmojiValid(emojiMatch, interaction, message) {
         flags: MessageFlags.ephemeral,
       })
     );
-    return false;
+    return true;
   }
-  return true;
+  return false;
 }
 
 module.exports = {
   isGuildExist,
-  isInGuild,
-  isAdmin,
-  isEmojiValid,
+  isInNotGuild,
+  isNotAdmin,
+  isEmojiNotValid,
 };

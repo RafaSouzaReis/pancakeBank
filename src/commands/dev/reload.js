@@ -1,14 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
-const Decimal = require("decimal.js");
-
-const User = require("../../database/models/userschema");
-const Guild = require("../../database/models/guildschema");
-
-const {
-  isInGuild,
-  isGuildExist,
-} = require("../../helpers/guards/guild-verification");
-const { isUserCheck } = require("../../helpers/guards/user-verification");
+const { SlashCommandBuilder } = require("discord.js");
 
 module.exports = {
   data: new SlashCommandBuilder()

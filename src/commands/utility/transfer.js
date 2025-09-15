@@ -1,18 +1,22 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const Decimal = require("decimal.js");
 const {
-  isInGuild,
+  isInNotGuild,
   isGuildExist,
 } = require("../../helpers/guards/guild-verification");
 const {
-  isUserCheck,
-  isTargetNotSelf,
+  isUserExist,
+  isTargetSelf,
 } = require("../../helpers/guards/user-verification");
-const { isValueValid } = require("../../helpers/guards/balance-verification");
+const {
+  isValueNotValid,
+  balanceCheck,
+} = require("../../helpers/guards/balance-verification");
 const createTransferEmbed = require("../../bicep/embeds/transfer-embed");
 const CalculeBalanceLogic = require("../../services/calc-balance-logic");
 
 const wrapInteraction = require("../../helpers/middleware/wrappers/wrap-interaction");
+const translate = require("../../i18n/translate");
 
 module.exports = {
   cooldown: 5,
@@ -35,40 +39,80 @@ module.exports = {
     const target = interaction.options.getUser("target");
     const value = interaction.options.getNumber("valor");
 
-    if (!(await isInGuild(interaction))) {
+    if (
+      await isInNotGuild(interaction, translate("pt", "guild.guildInNotGuild"))
+    ) {
       return;
     }
 
     const server = await Guild.findOne({ guildId: interaction.guild.id });
-    if (!isGuildExist(interaction, server)) {
+    if (
+      !(await isGuildExist(
+        interaction,
+        server,
+        translate("pt", "guild.guildNotExist")
+      ))
+    ) {
       return;
     }
 
     const user = await User.findOne({
       userId: interaction.user.id,
     });
-    if (isUserCheck(interaction, user)) {
+    if (
+      !(await isUserExist(
+        interaction,
+        user,
+        translate("pt", "user.userNotExist")
+      ))
+    ) {
       return;
     }
 
     const targetUser = await User.findOne({
       userId: target.id,
     });
-    if (isUserCheck(interaction, targetUser)) {
+    if (
+      !(await isUserExist(
+        interaction,
+        targetUser,
+        translate("pt", "user.userTargetNotExist")
+      ))
+    ) {
       return;
     }
 
-    if (isTargetNotSelf(interaction, user, targetUser)) {
+    if (
+      await isTargetSelf(
+        interaction,
+        user,
+        targetUser,
+        translate("pt", "user.userTargetSelf")
+      )
+    ) {
       return;
     }
 
-    if (await isValueValid(interaction, value)) {
+    if (
+      await isValueNotValid(
+        interaction,
+        value,
+        translate("pt", "balance.balanceValueValid")
+      )
+    ) {
       return;
     }
 
-    const coin = await server.coinName;
-    const emoji = await server.emojiRaw;
-    const emojiURL = await server.emojiURL;
+    if (
+      await balanceCheck(
+        interaction,
+        user,
+        value,
+        translate("pt", "balance.balanceCheck")
+      )
+    ) {
+      return;
+    }
 
     const { currentBalance, balanceFormatted, money } = CalculeBalanceLogic(
       user,
@@ -79,7 +123,6 @@ module.exports = {
     const {
       currentBalance: currentBalanceTarget,
       balanceFormatted: balanceFormattedTarget,
-      money: moneyTarget,
     } = CalculeBalanceLogic(user, value);
 
     await user.save();

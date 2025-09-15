@@ -3,7 +3,7 @@ jest.mock("../database/models/userschema", () =>
   require("./__mocks__/database/models/userschema")
 );
 
-const { isInGuild, UserExist, isGuildExist } = require("../services/export");
+const { isInNotGuild, UserExist, isGuildExist } = require("../services/export");
 const User = require("../database/models/userschema");
 const command = require("../commands/configs/register-user");
 
@@ -29,7 +29,7 @@ describe("/register-user", () => {
       },
       reply: jest.fn(),
     };
-    isInGuild.mockResolvedValue(true);
+    isInNotGuild.mockResolvedValue(true);
     isGuildExist.mockResolvedValue(true);
     UserExist.mockResolvedValue(false);
   });
@@ -37,7 +37,7 @@ describe("/register-user", () => {
   describe("Fluxo principal", () => {
     test("Deve retornar usuario registrado com sucesso", async () => {
       await command.execute(mockInteraction);
-      expect(isInGuild).toHaveBeenCalledWith(mockInteraction);
+      expect(isInNotGuild).toHaveBeenCalledWith(mockInteraction);
       expect(isGuildExist).toHaveBeenCalledWith(mockInteraction);
       expect(UserExist).toHaveBeenCalledWith(mockInteraction);
 
@@ -57,11 +57,11 @@ describe("/register-user", () => {
     });
   });
 
-  describe("isInGuild", () => {
-    test("Deve retornar sem executar se o isInGuild for false", async () => {
-      isInGuild.mockResolvedValue(false);
+  describe("isInNotGuild", () => {
+    test("Deve retornar sem executar se o isInNotGuild for false", async () => {
+      isInNotGuild.mockResolvedValue(false);
       await command.execute(mockInteraction);
-      expect(isInGuild).toHaveBeenCalledWith(mockInteraction);
+      expect(isInNotGuild).toHaveBeenCalledWith(mockInteraction);
       expect(isGuildExist).not.toHaveBeenCalled();
       expect(UserExist).not.toHaveBeenCalled();
       expect(User).not.toHaveBeenCalled();
@@ -72,7 +72,7 @@ describe("/register-user", () => {
     test("Deve retornar sem executar se o isGuildExist for false", async () => {
       isGuildExist.mockResolvedValue(false);
       await command.execute(mockInteraction);
-      expect(isInGuild).toHaveBeenCalledWith(mockInteraction);
+      expect(isInNotGuild).toHaveBeenCalledWith(mockInteraction);
       expect(isGuildExist).toHaveBeenCalledWith(mockInteraction);
       expect(UserExist).not.toHaveBeenCalled();
       expect(User).not.toHaveBeenCalled();
@@ -83,7 +83,7 @@ describe("/register-user", () => {
     test("Deve retornar sem executar se o UserExist for true", async () => {
       UserExist.mockResolvedValue(true);
       await command.execute(mockInteraction);
-      expect(isInGuild).toHaveBeenCalledWith(mockInteraction);
+      expect(isInNotGuild).toHaveBeenCalledWith(mockInteraction);
       expect(isGuildExist).toHaveBeenCalledWith(mockInteraction);
       expect(UserExist).toHaveBeenCalledWith(mockInteraction);
       expect(User).not.toHaveBeenCalled();

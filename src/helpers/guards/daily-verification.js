@@ -25,9 +25,9 @@ async function isDailyAlreadyClaimed(
         flags: MessageFlags.ephemeral,
       })
     );
-    return false;
+    return true;
   }
-  return true;
+  return false;
 }
 
 module.exports = {

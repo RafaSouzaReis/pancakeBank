@@ -2,10 +2,10 @@ const { SlashCommandBuilder, MessageFlags } = require("discord.js");
 const User = require("../../database/models/userschema");
 const Guild = require("../../database/models/guildschema");
 const {
-  isInGuild,
+  isInNotGuild,
   isGuildExist,
 } = require("../../helpers/guards/guild-verification");
-const { isUserCheck } = require("../../helpers/guards/user-verification");
+const { isUserExist } = require("../../helpers/guards/user-verification");
 const translate = require("../../i18n/translate");
 const wrapInteraction = require("../../helpers/middleware/wrappers/wrap-interaction");
 
@@ -16,14 +16,18 @@ module.exports = {
     .setDescription("Register User"),
   async execute(interaction) {
     if (
-      !(await isInGuild(interaction, translate("pt", "guild.guildInGuild")))
+      await isInNotGuild(interaction, translate("pt", "guild.guildInNotGuild"))
     ) {
       return;
     }
 
     const server = await Guild.findOne({ guildId: interaction.guild.id });
     if (
-      !isGuildExist(interaction, server, translate("pt", "guild.guildNotCheck"))
+      !(await isGuildExist(
+        interaction,
+        server,
+        translate("pt", "guild.guildNotExist")
+      ))
     ) {
       return;
     }
@@ -31,7 +35,9 @@ module.exports = {
     const user = await User.findOne({
       userId: interaction.user.id,
     });
-    if (isUserCheck(interaction, user)) {
+    if (
+      await isUserExist(interaction, user, translate("pt", "user.userExist"))
+    ) {
       return;
     }
 

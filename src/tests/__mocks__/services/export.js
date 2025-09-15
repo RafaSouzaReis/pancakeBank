@@ -1,7 +1,7 @@
 module.exports = {
-  isInGuild: jest.fn(),
-  isEmojiValid: jest.fn(),
-  isAdmin: jest.fn(),
+  isInNotGuild: jest.fn(),
+  isEmojiNotValid: jest.fn(),
+  isNotAdmin: jest.fn(),
   isGuildExist: jest.fn(),
   UserExist: jest.fn(),
 };

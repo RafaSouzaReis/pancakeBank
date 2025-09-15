@@ -4,10 +4,10 @@ const User = require("../../database/models/userschema");
 const Guild = require("../../database/models/guildschema");
 
 const {
-  isInGuild,
+  isInNotGuild,
   isGuildExist,
 } = require("../../helpers/guards/guild-verification");
-const { isUserCheck } = require("../../helpers/guards/user-verification");
+const { isUserExist } = require("../../helpers/guards/user-verification");
 const { isReceivedZero } = require("../../helpers/guards/balance-verification");
 
 const createMineEmbed = require("../../bicep/embeds/mine-embed");
@@ -16,24 +16,39 @@ const CalculeBalanceLogic = require("../../services/calc-balance-logic");
 const LootLogic = require("../../services/loot-logic");
 
 const wrapInteraction = require("../../helpers/middleware/wrappers/wrap-interaction");
+const translate = require("../../i18n/translate");
 
 module.exports = {
   cooldown: 30,
   data: new SlashCommandBuilder().setName("mine").setDescription("Miner coin"),
   async execute(interaction) {
-    if (!(await isInGuild(interaction))) {
+    if (
+      await isInNotGuild(interaction, translate("pt", "guild.guildInNotGuild"))
+    ) {
       return;
     }
 
     const server = await Guild.findOne({ guildId: interaction.guild.id });
-    if (!isGuildExist(interaction, server)) {
+    if (
+      !(await isGuildExist(
+        interaction,
+        server,
+        translate("pt", "guild.guildNotExist")
+      ))
+    ) {
       return;
     }
 
     const user = await User.findOne({
       userId: interaction.user.id,
     });
-    if (isUserCheck(interaction, user)) {
+    if (
+      !(await isUserExist(
+        interaction,
+        user,
+        translate("pt", "user.userNotExist")
+      ))
+    ) {
       return;
     }
 
@@ -46,11 +61,16 @@ module.exports = {
       ])
     );
 
-    if (await isReceivedZero(interaction, money)) {
+    if (
+      await isReceivedZero(
+        interaction,
+        money,
+        translate("pt", "balance.balanceReceivedZero")
+      )
+    ) {
       return;
     }
-    const coin = server.coinName;
-    const emoji = server.emojiRaw;
+
     await user.save();
 
     const embed = createMineEmbed(

@@ -4,9 +4,9 @@ jest.mock("../database/models/guildschema", () =>
 );
 
 const {
-  isInGuild,
-  isEmojiValid,
-  isAdmin,
+  isInNotGuild,
+  isEmojiNotValid,
+  isNotAdmin,
   isGuildExist,
 } = require("../services/export");
 const Guild = require("../database/models/guildschema");
@@ -34,9 +34,9 @@ describe("/register", () => {
       },
       reply: jest.fn(),
     };
-    isInGuild.mockResolvedValue(true);
-    isEmojiValid.mockResolvedValue(true);
-    isAdmin.mockResolvedValue(true);
+    isInNotGuild.mockResolvedValue(true);
+    isEmojiNotValid.mockResolvedValue(true);
+    isNotAdmin.mockResolvedValue(true);
     isGuildExist.mockResolvedValue(true);
   });
 
@@ -44,14 +44,14 @@ describe("/register", () => {
     test("Deve retornar sucesso no registro", async () => {
       await command.execute(mockInteraction);
 
-      expect(isInGuild).toHaveBeenCalledWith(mockInteraction);
+      expect(isInNotGuild).toHaveBeenCalledWith(mockInteraction);
 
       const emoji = mockInteraction.options.getString("emoji");
       const emojiMatch = emoji.match(/.*?:.*?:(\d+)/);
       const regexGif = /^<a?:[a-zA-Z0-9_]+:\d+>$/;
 
-      expect(isEmojiValid).toHaveBeenCalledWith(emojiMatch, mockInteraction);
-      expect(isAdmin).toHaveBeenCalledWith(mockInteraction);
+      expect(isEmojiNotValid).toHaveBeenCalledWith(emojiMatch, mockInteraction);
+      expect(isNotAdmin).toHaveBeenCalledWith(mockInteraction);
 
       const emojiId = emojiMatch[1];
       const emojiURL = `https://cdn.discordapp.com/emojis/${emojiId}.${
@@ -82,50 +82,50 @@ describe("/register", () => {
     });
   });
 
-  describe("isInGuild", () => {
-    test("Deve retornar sem executar se isInGuild for falso", async () => {
-      isInGuild.mockResolvedValue(false);
+  describe("isInNotGuild", () => {
+    test("Deve retornar sem executar se isInNotGuild for falso", async () => {
+      isInNotGuild.mockResolvedValue(false);
 
       await command.execute(mockInteraction);
 
-      expect(isInGuild).toHaveBeenCalledWith(mockInteraction);
-      expect(isEmojiValid).not.toHaveBeenCalled();
-      expect(isAdmin).not.toHaveBeenCalled();
+      expect(isInNotGuild).toHaveBeenCalledWith(mockInteraction);
+      expect(isEmojiNotValid).not.toHaveBeenCalled();
+      expect(isNotAdmin).not.toHaveBeenCalled();
       expect(isGuildExist).not.toHaveBeenCalled();
       expect(Guild).not.toHaveBeenCalled();
       expect(mockInteraction.reply).not.toHaveBeenCalled();
     });
   });
 
-  describe("isEmojiValid", () => {
+  describe("isEmojiNotValid", () => {
     test("Deve retornar sem executar se emoji for inválido", async () => {
       mockInteraction.options.getString = jest.fn((name) => {
         if (name === "coin") return "Coinsito";
         if (name === "emoji") return "invalidEmojiFormat";
       });
-      isEmojiValid.mockResolvedValue(false);
+      isEmojiNotValid.mockResolvedValue(false);
 
       await command.execute(mockInteraction);
 
-      expect(isInGuild).toHaveBeenCalledWith(mockInteraction);
-      expect(isEmojiValid).toHaveBeenCalled();
-      expect(isAdmin).not.toHaveBeenCalled();
+      expect(isInNotGuild).toHaveBeenCalledWith(mockInteraction);
+      expect(isEmojiNotValid).toHaveBeenCalled();
+      expect(isNotAdmin).not.toHaveBeenCalled();
       expect(isGuildExist).not.toHaveBeenCalled();
       expect(Guild).not.toHaveBeenCalled();
       expect(mockInteraction.reply).not.toHaveBeenCalled();
     });
   });
 
-  describe("isAdmin", () => {
-    test("Deve retornar sem executar se isAdmin for falso", async () => {
-      isEmojiValid.mockResolvedValue(true);
-      isAdmin.mockResolvedValue(false);
+  describe("isNotAdmin", () => {
+    test("Deve retornar sem executar se isNotAdmin for falso", async () => {
+      isEmojiNotValid.mockResolvedValue(true);
+      isNotAdmin.mockResolvedValue(false);
 
       await command.execute(mockInteraction);
 
-      expect(isInGuild).toHaveBeenCalledWith(mockInteraction);
-      expect(isEmojiValid).toHaveBeenCalled();
-      expect(isAdmin).toHaveBeenCalledWith(mockInteraction);
+      expect(isInNotGuild).toHaveBeenCalledWith(mockInteraction);
+      expect(isEmojiNotValid).toHaveBeenCalled();
+      expect(isNotAdmin).toHaveBeenCalledWith(mockInteraction);
       expect(isGuildExist).not.toHaveBeenCalled();
       expect(Guild).not.toHaveBeenCalled();
       expect(mockInteraction.reply).not.toHaveBeenCalled();
@@ -134,15 +134,15 @@ describe("/register", () => {
 
   describe("isGuildExist", () => {
     test("Deve retornar sem executar se isGuildExist for falso", async () => {
-      isEmojiValid.mockResolvedValue(true);
-      isAdmin.mockResolvedValue(true);
+      isEmojiNotValid.mockResolvedValue(true);
+      isNotAdmin.mockResolvedValue(true);
       isGuildExist.mockResolvedValue(false);
 
       await command.execute(mockInteraction);
 
-      expect(isInGuild).toHaveBeenCalledWith(mockInteraction);
-      expect(isEmojiValid).toHaveBeenCalled();
-      expect(isAdmin).toHaveBeenCalledWith(mockInteraction);
+      expect(isInNotGuild).toHaveBeenCalledWith(mockInteraction);
+      expect(isEmojiNotValid).toHaveBeenCalled();
+      expect(isNotAdmin).toHaveBeenCalledWith(mockInteraction);
       expect(isGuildExist).toHaveBeenCalled();
       expect(Guild).not.toHaveBeenCalled();
       expect(mockInteraction.reply).not.toHaveBeenCalled();

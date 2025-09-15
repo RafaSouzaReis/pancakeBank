@@ -1,7 +1,7 @@
 const { MessageFlags } = require("discord.js");
 const wrapInteraction = require("../middleware/wrappers/wrap-interaction");
 
-async function isUserCheck(interaction, user, message) {
+async function isUserExist(interaction, user, message) {
   if (user) {
     await wrapInteraction(interaction, (i) =>
       i.reply({
@@ -9,12 +9,12 @@ async function isUserCheck(interaction, user, message) {
         flags: MessageFlags.ephemeral,
       })
     );
-    return false;
+    return true;
   }
-  return true;
+  return false;
 }
 
-async function isTargetNotSelf(interaction, user, target, message) {
+async function isTargetSelf(interaction, user, target, message) {
   if (user.userId === target.userId) {
     await wrapInteraction(interaction, (i) =>
       i.reply({
@@ -22,12 +22,12 @@ async function isTargetNotSelf(interaction, user, target, message) {
         flags: MessageFlags.ephemeral,
       })
     );
-    return false;
+    return true;
   }
-  return true;
+  return false;
 }
 
 module.exports = {
-  isUserCheck,
-  isTargetNotSelf,
+  isUserExist,
+  isTargetSelf,
 };

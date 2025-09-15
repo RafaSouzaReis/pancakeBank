@@ -5,7 +5,7 @@ jest.mock("discord.js", () => ({
 }));
 
 const {
-  isInGuild,
+  isInNotGuild,
   isDailyAlreadyClaimed,
   UserExist,
   isGuildExist,
@@ -18,7 +18,7 @@ const command = require("../commands/money/daily");
 describe("/daily", () => {
   beforeAll(() => {
     jest.clearAllMocks();
-    isInGuild.mockResolvedValue(true);
+    isInNotGuild.mockResolvedValue(true);
     isDailyAlreadyClaimed.mockResolvedValue(false);
     UserExist.mockResolvedValue(true);
     isGuildExist.mockResolvedValue(true);
@@ -27,7 +27,7 @@ describe("/daily", () => {
   describe("Fluxo Principal", () => {
     test("Deve retornar com exito sem erro.", async () => {
       await command.execute(mockInteraction);
-      expect(isInGuild).toHaveBeenCalledWith(mockInteraction);
+      expect(isInNotGuild).toHaveBeenCalledWith(mockInteraction);
       expect(isGuildExist).toHaveBeenLastCalledWith(mockInteraction);
       expect(UserExist).toHaveBeenCalledWith(mockInteraction);
       expect(isDailyAlreadyClaimed).toHaveBeenCalledWith(mockInteraction);
