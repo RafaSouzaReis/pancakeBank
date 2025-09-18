@@ -1,8 +1,3 @@
-const balanceEmbed = require("../bicep/embeds/balance-embed");
-const dailyEmbed = require("../bicep/embeds/daily-embed");
-const mineEmbed = require("../bicep/embeds/mine-embed");
-const transferEmbed = require("../bicep/embeds/transfer-embed");
-
 const messages = {
   pt: {
     errors: {

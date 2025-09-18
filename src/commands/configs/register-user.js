@@ -3,7 +3,7 @@ const User = require("../../database/models/userschema");
 const Guild = require("../../database/models/guildschema");
 const {
   isInNotGuild,
-  isGuildExist,
+  isGuildNotExist,
 } = require("../../helpers/guards/guild-verification");
 const { isUserExist } = require("../../helpers/guards/user-verification");
 const translate = require("../../i18n/translate");
@@ -23,11 +23,11 @@ module.exports = {
 
     const server = await Guild.findOne({ guildId: interaction.guild.id });
     if (
-      !(await isGuildExist(
+      await isGuildNotExist(
         interaction,
         server,
         translate("pt", "guild.guildNotExist")
-      ))
+      )
     ) {
       return;
     }

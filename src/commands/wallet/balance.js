@@ -1,8 +1,16 @@
-const { SlashCommandBuilder, MessageFlags } = require("discord.js");
+const { SlashCommandBuilder } = require("discord.js");
 
 const Guild = require("../../database/models/guildschema");
+const User = require("../../database/models/userschema");
 
-const { isInNotGuild } = require("../../helpers/guards/guild-verification");
+const {
+  isInNotGuild,
+  isGuildNotExist,
+} = require("../../helpers/guards/guild-verification");
+const { isUserNotExist } = require("../../helpers/guards/user-verification");
+const createBalanceEmbed = require("../../bicep/embeds/balance-embed");
+
+const Decimal = require("decimal.js");
 
 const wrapInteraction = require("../../helpers/middleware/wrappers/wrap-interaction");
 
@@ -23,11 +31,11 @@ module.exports = {
 
     const server = await Guild.findOne({ guildId: interaction.guild.id });
     if (
-      !(await isGuildExist(
+      await isGuildNotExist(
         interaction,
         server,
         translate("pt", "guild.guildNotExist")
-      ))
+      )
     ) {
       return;
     }
@@ -36,18 +44,17 @@ module.exports = {
       userId: interaction.user.id,
     });
     if (
-      !(await isUserExist(
+      await isUserNotExist(
         interaction,
         user,
         translate("pt", "user.userNotExist")
-      ))
+      )
     ) {
       return;
     }
 
     const balanceDecimal = new Decimal(user.balance.toString());
     const balanceFormatted = balanceDecimal.toFixed(2);
-
     const embed = createBalanceEmbed(interaction, server, balanceFormatted);
     await wrapInteraction(interaction, (i) =>
       i.reply({

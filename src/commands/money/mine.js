@@ -5,9 +5,9 @@ const Guild = require("../../database/models/guildschema");
 
 const {
   isInNotGuild,
-  isGuildExist,
+  isGuildNotExist,
 } = require("../../helpers/guards/guild-verification");
-const { isUserExist } = require("../../helpers/guards/user-verification");
+const { isUserNotExist } = require("../../helpers/guards/user-verification");
 const { isReceivedZero } = require("../../helpers/guards/balance-verification");
 
 const createMineEmbed = require("../../bicep/embeds/mine-embed");
@@ -30,7 +30,7 @@ module.exports = {
 
     const server = await Guild.findOne({ guildId: interaction.guild.id });
     if (
-      !(await isGuildExist(
+      !(await isGuildNotExist(
         interaction,
         server,
         translate("pt", "guild.guildNotExist")
@@ -43,7 +43,7 @@ module.exports = {
       userId: interaction.user.id,
     });
     if (
-      !(await isUserExist(
+      !(await isUserNotExist(
         interaction,
         user,
         translate("pt", "user.userNotExist")

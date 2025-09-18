@@ -2,10 +2,10 @@ const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const Decimal = require("decimal.js");
 const {
   isInNotGuild,
-  isGuildExist,
+  isGuildNotExist,
 } = require("../../helpers/guards/guild-verification");
 const {
-  isUserExist,
+  isUserNotExist,
   isTargetSelf,
 } = require("../../helpers/guards/user-verification");
 const {
@@ -47,7 +47,7 @@ module.exports = {
 
     const server = await Guild.findOne({ guildId: interaction.guild.id });
     if (
-      !(await isGuildExist(
+      !(await isGuildNotExist(
         interaction,
         server,
         translate("pt", "guild.guildNotExist")
@@ -60,7 +60,7 @@ module.exports = {
       userId: interaction.user.id,
     });
     if (
-      !(await isUserExist(
+      !(await isUserNotExist(
         interaction,
         user,
         translate("pt", "user.userNotExist")
@@ -73,7 +73,7 @@ module.exports = {
       userId: target.id,
     });
     if (
-      !(await isUserExist(
+      !(await isUserNotExist(
         interaction,
         targetUser,
         translate("pt", "user.userTargetNotExist")

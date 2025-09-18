@@ -2,6 +2,19 @@ const { MessageFlags } = require("discord.js");
 const wrapInteraction = require("../middleware/wrappers/wrap-interaction");
 
 async function isGuildExist(interaction, server, message) {
+  if (server) {
+    await wrapInteraction(interaction, (i) =>
+      i.reply({
+        content: message,
+        flags: MessageFlags.ephemeral,
+      })
+    );
+    return true;
+  }
+  return false;
+}
+
+async function isGuildNotExist(interaction, server, message) {
   if (!server) {
     await wrapInteraction(interaction, (i) =>
       i.reply({
@@ -58,4 +71,5 @@ module.exports = {
   isInNotGuild,
   isNotAdmin,
   isEmojiNotValid,
+  isGuildNotExist,
 };
