@@ -5,8 +5,8 @@ async function isDailyAlreadyClaimed(
   interaction,
   now,
   user,
-  mode = "24h",
-  message
+  message,
+  mode = "24h"
 ) {
   let alreadyClaimed = false;
 

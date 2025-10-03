@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
+const { SlashCommandBuilder } = require("discord.js");
 
 const User = require("../../database/models/userschema");
 const Guild = require("../../database/models/guildschema");
@@ -8,7 +8,9 @@ const {
   isGuildNotExist,
 } = require("../../helpers/guards/guild-verification");
 const { isUserNotExist } = require("../../helpers/guards/user-verification");
-const isDailyAlreadyClaimed = require("../../helpers/guards/daily-verification");
+const {
+  isDailyAlreadyClaimed,
+} = require("../../helpers/guards/daily-verification");
 
 const wrapInteraction = require("../../helpers/middleware/wrappers/wrap-interaction");
 
@@ -31,20 +33,23 @@ module.exports = {
     }
     const server = await Guild.findOne({ guildId: interaction.guild.id });
     if (
-      !(await isGuildNotExist(
+      await isGuildNotExist(
         interaction,
         server,
         translate("pt", "guild.guildNotExist")
-      ))
+      )
     ) {
       return;
     }
-
     const user = await User.findOne({
       userId: interaction.user.id,
     });
     if (
-      isUserNotExist(interaction, user, translate("pt", "user.userNotExist"))
+      await isUserNotExist(
+        interaction,
+        user,
+        translate("pt", "user.userNotExist")
+      )
     ) {
       return;
     }
@@ -62,17 +67,16 @@ module.exports = {
       await isDailyAlreadyClaimed(
         interaction,
         now,
+        user,
         translate("pt", "daily.dailyAlreadyClaimed")
       )
     ) {
       return;
     }
 
-    user.balance = balanceFormatted.toString();
+    user.balance = balanceFormatted;
     user.lastDaily = now;
     await user.save();
-
-    createDailyEmbed();
 
     const embed = createDailyEmbed(
       interaction,

@@ -27,14 +27,13 @@ module.exports = {
     ) {
       return;
     }
-
     const server = await Guild.findOne({ guildId: interaction.guild.id });
     if (
-      !(await isGuildNotExist(
+      await isGuildNotExist(
         interaction,
         server,
         translate("pt", "guild.guildNotExist")
-      ))
+      )
     ) {
       return;
     }
@@ -43,22 +42,24 @@ module.exports = {
       userId: interaction.user.id,
     });
     if (
-      !(await isUserNotExist(
+      await isUserNotExist(
         interaction,
         user,
         translate("pt", "user.userNotExist")
-      ))
+      )
     ) {
       return;
     }
 
     const { currentBalance, balanceFormatted, money } = CalculeBalanceLogic(
       user,
-      LootLogic([
-        { chance: 50, reward: 100000 },
-        { chance: 1000, reward: () => Math.random() * (200 - 0) + 0 },
-        true,
-      ])
+      LootLogic(
+        [
+          { chance: 50, reward: 100000 },
+          { chance: 1000, reward: () => Math.random() * (200 - 0) + 0 },
+        ],
+        true
+      )
     );
 
     if (
@@ -71,6 +72,7 @@ module.exports = {
       return;
     }
 
+    user.balance = balanceFormatted;
     await user.save();
 
     const embed = createMineEmbed(
@@ -81,6 +83,7 @@ module.exports = {
       money
     );
 
+    //O money não tem valor a partir daqui
     await wrapInteraction(interaction, (i) =>
       i.reply({
         embeds: [embed],

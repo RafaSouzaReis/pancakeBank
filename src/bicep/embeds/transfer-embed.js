@@ -7,7 +7,7 @@ module.exports = function createTransferEmbed(
   money,
   currentBalance,
   balanceFormatted,
-  targetUser,
+  target,
   currentBalanceTarget,
   balanceFormattedTarget
 ) {
@@ -19,7 +19,7 @@ module.exports = function createTransferEmbed(
         emoji: server.emojiRaw,
         amount: money,
         coinName: server.coinName,
-        target: targetUser.username,
+        target: target.username,
       })
     )
     .addFields(
@@ -41,7 +41,7 @@ module.exports = function createTransferEmbed(
       { name: "\u200B", value: "\u200B", inline: false },
       {
         name: translate("pt", "transferEmbed.previousBalanceTarget", {
-          target: targetUser.username,
+          target: target.username,
         }),
         value: `${server.emojiRaw}$${currentBalanceTarget}`,
         inline: true,
@@ -53,7 +53,7 @@ module.exports = function createTransferEmbed(
       },
       {
         name: translate("pt", "transferEmbed.currentBalanceTarget", {
-          target: targetUser.username,
+          target: target.username,
         }),
         value: `${server.emojiRaw}$${balanceFormattedTarget}`,
         inline: true,

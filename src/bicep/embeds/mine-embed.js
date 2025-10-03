@@ -5,7 +5,8 @@ module.exports = function createMineEmbed(
   interaction,
   server,
   currentBalance,
-  balanceFormatted
+  balanceFormatted,
+  money
 ) {
   return new EmbedBuilder()
     .setColor("Gold")

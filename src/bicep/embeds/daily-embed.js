@@ -13,18 +13,14 @@ module.exports = function createDailyEmbed(
     .setTitle(translate("pt", "dailyEmbed.title"))
     .setDescription(
       translate("pt", "dailyEmbed.description", {
-        coiName: server.coinName,
+        coinName: server.coinName,
         emoji: server.emojiRaw,
-        amount: balanceFormatted,
+        amount: money,
       })
     )
     .addFields(
       {
-        name: translate("pt", "dailyEmbed.previousBalance", {
-          coinName: server.coinName,
-          emoji: server.emojiRaw,
-          amount: money,
-        }),
+        name: translate("pt", "dailyEmbed.previousBalance"),
         value: `${server.emojiRaw}$${currentBalance}`,
         inline: true,
       },

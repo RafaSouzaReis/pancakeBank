@@ -43,6 +43,10 @@ module.exports = {
       return;
     }
 
+    if (await isNotAdmin(interaction, translate("pt", "guild.guildAdmin"))) {
+      return;
+    }
+
     const emoji = interaction.options.getString("emoji");
     const emojiMatch = emoji.match(/.*?:.*?:(\d+)/);
     const regexGif = /^<a?:[a-zA-Z0-9_]+:\d+>$/;
@@ -54,10 +58,6 @@ module.exports = {
         translate("pt", "guild.guildEmojiNotValid")
       )
     ) {
-      return;
-    }
-
-    if (await isNotAdmin(interaction, translate("pt", "guild.guildAdmin"))) {
       return;
     }
 
@@ -92,7 +92,7 @@ module.exports = {
 
     await wrapInteraction(interaction, (i) =>
       i.reply({
-        content: messages.pt.success.registerServerSuccess,
+        content: translate("pt", "guild.guildRegisterSuccess"),
         flags: MessageFlags.Ephemeral,
       })
     );

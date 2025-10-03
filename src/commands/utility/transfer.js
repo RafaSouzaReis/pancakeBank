@@ -1,5 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
-const Decimal = require("decimal.js");
+const { SlashCommandBuilder } = require("discord.js");
 const {
   isInNotGuild,
   isGuildNotExist,
@@ -12,6 +11,10 @@ const {
   isValueNotValid,
   balanceCheck,
 } = require("../../helpers/guards/balance-verification");
+
+const Guild = require("../../database/models/guildschema");
+const User = require("../../database/models/userschema");
+
 const createTransferEmbed = require("../../bicep/embeds/transfer-embed");
 const CalculeBalanceLogic = require("../../services/calc-balance-logic");
 
@@ -47,11 +50,11 @@ module.exports = {
 
     const server = await Guild.findOne({ guildId: interaction.guild.id });
     if (
-      !(await isGuildNotExist(
+      await isGuildNotExist(
         interaction,
         server,
         translate("pt", "guild.guildNotExist")
-      ))
+      )
     ) {
       return;
     }
@@ -60,11 +63,11 @@ module.exports = {
       userId: interaction.user.id,
     });
     if (
-      !(await isUserNotExist(
+      await isUserNotExist(
         interaction,
         user,
         translate("pt", "user.userNotExist")
-      ))
+      )
     ) {
       return;
     }
@@ -73,11 +76,11 @@ module.exports = {
       userId: target.id,
     });
     if (
-      !(await isUserNotExist(
+      await isUserNotExist(
         interaction,
         targetUser,
         translate("pt", "user.userTargetNotExist")
-      ))
+      )
     ) {
       return;
     }
@@ -123,7 +126,10 @@ module.exports = {
     const {
       currentBalance: currentBalanceTarget,
       balanceFormatted: balanceFormattedTarget,
-    } = CalculeBalanceLogic(user, value);
+    } = CalculeBalanceLogic(targetUser, value);
+
+    user.balance = balanceFormatted;
+    targetUser.balance = balanceFormattedTarget;
 
     await user.save();
     await targetUser.save();
@@ -134,7 +140,7 @@ module.exports = {
       money,
       currentBalance,
       balanceFormatted,
-      targetUser,
+      target,
       currentBalanceTarget,
       balanceFormattedTarget
     );
