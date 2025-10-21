@@ -1,6 +1,6 @@
 {
   "name": "pancakeBank",
-  "packageManager": "yarn@4.9.1",
+  "packageManager": "bun@1.3.0",
   "dependencies": {
     "chalk": "^5.4.1",
     "decimal.js": "^10.5.0",
@@ -14,9 +14,10 @@
     "jest": "^30.0.4"
   },
   "scripts": {
-    "dev": "node ./src/app.js",
-    "deploy:dev": "node ./src/scripts/deployCommandsDev.js",
-    "deploy:global": "node ./src/scripts/deployCommandsGlobal.js",
-    "test": "jest"
+    "dev": "bun ./src/app.js",
+    "deploy:dev": "bun ./src/scripts/deployCommandsDev.js",
+    "deploy:global": "bun ./src/scripts/deployCommandsGlobal.js",
+    "test": "bunx jest",
+    "lint": "bunx eslint ."
   }
 }
