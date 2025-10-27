@@ -1,13 +1,13 @@
 const { SlashCommandBuilder, MessageFlags } = require("discord.js");
-const Guild = require("../../database/models/guildschema");
+const Guild = require("@database/models/guildschema");
 const {
   isInNotGuild,
   isEmojiNotValid,
   isNotAdmin,
   isGuildExist,
-} = require("../../helpers/guards/guild-verification");
-const translate = require("../../i18n/translate");
-const wrapInteraction = require("../../helpers/middleware/wrappers/wrap-interaction");
+} = require("@helpers/guards/guild-verification");
+const translate = require("@i18n/translate");
+const wrapInteraction = require("@helpers/middleware/wrappers/wrap-interaction");
 
 module.exports = {
   cooldown: 5,

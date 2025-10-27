@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const { SlashCommandBuilder, MessageFlags } = require("discord.js");
+
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("reload")

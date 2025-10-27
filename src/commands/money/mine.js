@@ -1,22 +1,20 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 
-const User = require("../../database/models/userschema");
-const Guild = require("../../database/models/guildschema");
+const User = require("@database/models/userschema");
+const Guild = require("@database/models/guildschema");
 
 const {
   isInNotGuild,
   isGuildNotExist,
-} = require("../../helpers/guards/guild-verification");
-const { isUserNotExist } = require("../../helpers/guards/user-verification");
-const { isReceivedZero } = require("../../helpers/guards/balance-verification");
+} = require("@helpers/guards/guild-verification");
+const { isUserNotExist } = require("@helpers/guards/user-verification");
+const { isReceivedZero } = require("@helpers/guards/balance-verification");
 
-const createMineEmbed = require("../../bicep/embeds/mine-embed");
-
-const CalculeBalanceLogic = require("../../services/calc-balance-logic");
-const LootLogic = require("../../services/loot-logic");
-
-const wrapInteraction = require("../../helpers/middleware/wrappers/wrap-interaction");
-const translate = require("../../i18n/translate");
+const createMineEmbed = require("@bicep/embeds/mine-embed");
+const CalculeBalanceLogic = require("@services/calc-balance-logic");
+const LootLogic = require("@services/loot-logic");
+const wrapInteraction = require("@helpers/middleware/wrappers/wrap-interaction");
+const translate = require("@i18n/translate");
 
 module.exports = {
   cooldown: 30,
@@ -85,7 +83,7 @@ module.exports = {
 
     //O money não tem valor a partir daqui
     await wrapInteraction(interaction, (i) =>
-      i.reply({
+      i.editReply({
         embeds: [embed],
       })
     );

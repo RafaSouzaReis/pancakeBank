@@ -1,6 +1,6 @@
 const { REST, Routes } = require("discord.js");
 require("dotenv").config();
-const loadingCommands = require("./loadingCommands");
+const loadingCommands = require("@scripts/loadingCommands");
 
 const commands = loadingCommands()
   .filter((cmd) => cmd.data.name !== "reload")

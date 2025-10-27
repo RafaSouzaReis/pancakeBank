@@ -1,25 +1,25 @@
 const { SlashCommandBuilder } = require("discord.js");
+
+const Guild = require("@database/models/guildschema");
+const User = require("@database/models/userschema");
+
 const {
   isInNotGuild,
   isGuildNotExist,
-} = require("../../helpers/guards/guild-verification");
+} = require("@helpers/guards/guild-verification");
 const {
   isUserNotExist,
   isTargetSelf,
-} = require("../../helpers/guards/user-verification");
+} = require("@helpers/guards/user-verification");
 const {
   isValueNotValid,
   balanceCheck,
-} = require("../../helpers/guards/balance-verification");
+} = require("@helpers/guards/balance-verification");
 
-const Guild = require("../../database/models/guildschema");
-const User = require("../../database/models/userschema");
-
-const createTransferEmbed = require("../../bicep/embeds/transfer-embed");
-const CalculeBalanceLogic = require("../../services/calc-balance-logic");
-
-const wrapInteraction = require("../../helpers/middleware/wrappers/wrap-interaction");
-const translate = require("../../i18n/translate");
+const createTransferEmbed = require("@bicep/embeds/transfer-embed");
+const CalculeBalanceLogic = require("@services/calc-balance-logic");
+const wrapInteraction = require("@helpers/middleware/wrappers/wrap-interaction");
+const translate = require("@i18n/translate");
 
 module.exports = {
   cooldown: 5,
@@ -146,7 +146,7 @@ module.exports = {
     );
 
     await wrapInteraction(interaction, (i) =>
-      i.reply({
+      i.editReply({
         embeds: [embed],
       })
     );

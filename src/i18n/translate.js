@@ -1,4 +1,4 @@
-const messages = require("./messages");
+const messages = require("@i18n/messages");
 
 module.exports = function translate(lang, key, vars = {}) {
   const keys = key.split(".");

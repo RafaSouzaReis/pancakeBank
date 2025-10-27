@@ -1,5 +1,5 @@
 const { MessageFlags } = require("discord.js");
-const wrapInteraction = require("../middleware/wrappers/wrap-interaction");
+const wrapInteraction = require("@helpers/middleware/wrappers/wrap-interaction");
 
 async function isUserExist(interaction, user, message) {
   if (user) {

@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@database/*": ["src/database/*"],
+      "@helpers/*": ["src/helpers/*"],
+      "@i18n/*": ["src/i18n/*"],
+      "@commands/*": ["src/commands/*"],
+      "@services/*": ["src/services/*"],
+      "@bicep/*": ["src/bicep/*"],
+      "@scripts/*": ["src/scripts/*"],
+      "@configs/*": ["src/configs/*"],
+      "@handlers/*": ["src/handlers/*"]
+    }
+  },
+  "include": ["src"]
+}

@@ -1,24 +1,20 @@
 const { SlashCommandBuilder } = require("discord.js");
 
-const User = require("../../database/models/userschema");
-const Guild = require("../../database/models/guildschema");
+const User = require("@database/models/userschema");
+const Guild = require("@database/models/guildschema");
 
 const {
   isInNotGuild,
   isGuildNotExist,
-} = require("../../helpers/guards/guild-verification");
-const { isUserNotExist } = require("../../helpers/guards/user-verification");
-const {
-  isDailyAlreadyClaimed,
-} = require("../../helpers/guards/daily-verification");
+} = require("@helpers/guards/guild-verification");
+const { isUserNotExist } = require("@helpers/guards/user-verification");
+const { isDailyAlreadyClaimed } = require("@helpers/guards/daily-verification");
 
-const wrapInteraction = require("../../helpers/middleware/wrappers/wrap-interaction");
-
-const CalculeBalanceLogic = require("../../services/calc-balance-logic");
-const LootLogic = require("../../services/loot-logic");
-
-const createDailyEmbed = require("../../bicep/embeds/daily-embed");
-const translate = require("../../i18n/translate");
+const CalculeBalanceLogic = require("@services/calc-balance-logic");
+const LootLogic = require("@services/loot-logic");
+const createDailyEmbed = require("@bicep/embeds/daily-embed");
+const wrapInteraction = require("@helpers/middleware/wrappers/wrap-interaction");
+const translate = require("@i18n/translate");
 
 module.exports = {
   cooldown: 5,
@@ -87,7 +83,7 @@ module.exports = {
     );
 
     await wrapInteraction(interaction, (i) =>
-      i.reply({
+      i.editReply({
         embeds: [embed],
       })
     );

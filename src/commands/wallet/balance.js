@@ -1,20 +1,18 @@
 const { SlashCommandBuilder } = require("discord.js");
+const Decimal = require("decimal.js");
 
-const Guild = require("../../database/models/guildschema");
-const User = require("../../database/models/userschema");
+const Guild = require("@database/models/guildschema");
+const User = require("@database/models/userschema");
 
 const {
   isInNotGuild,
   isGuildNotExist,
-} = require("../../helpers/guards/guild-verification");
-const { isUserNotExist } = require("../../helpers/guards/user-verification");
-const createBalanceEmbed = require("../../bicep/embeds/balance-embed");
+} = require("@helpers/guards/guild-verification");
+const { isUserNotExist } = require("@helpers/guards/user-verification");
 
-const Decimal = require("decimal.js");
-
-const wrapInteraction = require("../../helpers/middleware/wrappers/wrap-interaction");
-
-const translate = require("../../i18n/translate");
+const createBalanceEmbed = require("@bicep/embeds/balance-embed");
+const wrapInteraction = require("@helpers/middleware/wrappers/wrap-interaction");
+const translate = require("@i18n/translate");
 
 module.exports = {
   cooldown: 5,
@@ -57,7 +55,7 @@ module.exports = {
     const balanceFormatted = balanceDecimal.toFixed(2);
     const embed = createBalanceEmbed(interaction, server, balanceFormatted);
     await wrapInteraction(interaction, (i) =>
-      i.reply({
+      i.editReply({
         embeds: [embed],
       })
     );

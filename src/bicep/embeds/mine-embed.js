@@ -1,5 +1,5 @@
 const { EmbedBuilder } = require("discord.js");
-const translate = require("../../i18n/translate");
+const translate = require("@i18n/translate");
 
 module.exports = function createMineEmbed(
   interaction,

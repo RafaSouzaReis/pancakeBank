@@ -1,8 +1,12 @@
 const { MessageFlags } = require("discord.js");
-const translate = require("../../../i18n/translate");
+const translate = require("@i18n/translate");
 
 module.exports = async function wrapInteraction(interaction, callBack) {
   try {
+    if (!interaction.deferred && !interaction.replied) {
+      await interaction.deferReply({ ephemeral: true });
+    }
+
     await callBack(interaction);
   } catch (error) {
     console.error("Error occurred while processing interaction:", error);
@@ -11,15 +15,12 @@ module.exports = async function wrapInteraction(interaction, callBack) {
       command: interaction.commandName,
     });
 
-    if (!interaction.replied && !interaction.deferred) {
-      await interaction.reply({
+    if (interaction.deferred || interaction.replied) {
+      await interaction.editReply({
         content: errorMessage,
-        flags: MessageFlags.Ephemeral,
       });
-    } else if (interaction.deferred) {
-      await interaction.editReply({ content: errorMessage });
     } else {
-      await interaction.followUp({
+      await interaction.reply({
         content: errorMessage,
         flags: MessageFlags.Ephemeral,
       });
