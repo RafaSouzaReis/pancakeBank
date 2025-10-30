@@ -17,7 +17,7 @@
     "dev": "bun ./src/app.js",
     "deploy:dev": "bun ./src/scripts/deployCommandsDev.js",
     "deploy:global": "bun ./src/scripts/deployCommandsGlobal.js",
-    "test": "bunx jest",
+    "jest": "bunx jest",
     "lint": "bunx eslint ."
   }
 }
