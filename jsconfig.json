@@ -1,17 +1,26 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
+    "target": "ES2020",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "strict": false,
+    "ignoreDeprecations": "6.0",
     "paths": {
-      "@database/*": ["src/database/*"],
-      "@helpers/*": ["src/helpers/*"],
-      "@i18n/*": ["src/i18n/*"],
-      "@commands/*": ["src/commands/*"],
-      "@services/*": ["src/services/*"],
-      "@bicep/*": ["src/bicep/*"],
-      "@scripts/*": ["src/scripts/*"],
-      "@configs/*": ["src/configs/*"],
-      "@handlers/*": ["src/handlers/*"]
+      "@database/*": ["./src/database/*"],
+      "@helpers/*": ["./src/helpers/*"],
+      "@i18n/*": ["./src/i18n/*"],
+      "@commands/*": ["./src/commands/*"],
+      "@services/*": ["./src/services/*"],
+      "@bicep/*": ["./src/bicep/*"],
+      "@scripts/*": ["./src/scripts/*"],
+      "@configs/*": ["./src/configs/*"],
+      "@handlers/*": ["./src/handlers/*"],
+      "@events/*": ["./src/events/*"]
     }
   },
-  "include": ["src"]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "build"]
 }
