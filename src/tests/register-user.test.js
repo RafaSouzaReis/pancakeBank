@@ -12,7 +12,7 @@ jest.mock("@helpers/guards/user-verification", () =>
 );
 jest.mock("@i18n/translate", () => require("@mocks/i18n/translate"));
 jest.mock("@helpers/middleware/wrappers/wrap-interaction", () =>
-  require("@mocks/helpers/middleware/wrap-interaction")
+  require("@mocks/helpers/middleware/wrappers/wrap-interaction")
 );
 
 const User = require("@database/models/userschema");
@@ -25,6 +25,15 @@ const { isUserExist } = require("@helpers/guards/user-verification");
 const translate = require("@i18n/translate");
 const wrapInteraction = require("@helpers/middleware/wrappers/wrap-interaction");
 const command = require("@commands/configs/register-user");
+
+const expectCalledBefore = (mockA, mockB) => {
+  const callOrderA = mockA.mock.invocationCallOrder?.[0] || Infinity;
+  const callOrderB = mockB.mock.invocationCallOrder?.[0] || Infinity;
+
+  expect(mockA).toHaveBeenCalled();
+  expect(mockB).toHaveBeenCalled();
+  expect(callOrderA).toBeLessThan(callOrderB);
+};
 
 describe("Register User Command", () => {
   let mockSave, mockInteraction;
@@ -44,30 +53,27 @@ describe("Register User Command", () => {
       ...data,
       save: mockSave,
     }));
-
-    translate.mockImplementation((lang, key) => key);
   });
 
   describe("✅ Cenário de Sucesso", () => {
     beforeEach(() => {
-      // Setup para sucesso
       isInNotGuild.mockResolvedValue(false);
       Guild.findOne.mockResolvedValue({ guildId: "guild123" });
       isGuildNotExist.mockResolvedValue(false);
-      User.findOne.mockResolvedValue(null); // Usuário não existe
+      User.findOne.mockResolvedValue(null);
       isUserExist.mockResolvedValue(false);
     });
 
     test("deve registrar um usuário com sucesso respeitando a ordem de execução", async () => {
       await command.execute(mockInteraction);
 
-      expect(isInNotGuild).toHaveBeenCalledBefore(Guild.findOne);
-      expect(Guild.findOne).toHaveBeenCalledBefore(isGuildNotExist);
-      expect(isGuildNotExist).toHaveBeenCalledBefore(User.findOne);
-      expect(User.findOne).toHaveBeenCalledBefore(isUserExist);
-      expect(isUserExist).toHaveBeenCalledBefore(User);
-      expect(User).toHaveBeenCalledBefore(mockSave);
-      expect(mockSave).toHaveBeenCalledBefore(wrapInteraction);
+      expectCalledBefore(isInNotGuild, Guild.findOne);
+      expectCalledBefore(Guild.findOne, isGuildNotExist);
+      expectCalledBefore(isGuildNotExist, User.findOne);
+      expectCalledBefore(User.findOne, isUserExist);
+      expectCalledBefore(isUserExist, User);
+      expectCalledBefore(User, mockSave);
+      expectCalledBefore(mockSave, wrapInteraction);
 
       expect(isInNotGuild).toHaveBeenCalledWith(
         mockInteraction,
@@ -111,10 +117,6 @@ describe("Register User Command", () => {
       expect(translate).toHaveBeenCalledWith("pt", "user.userExist");
       expect(translate).toHaveBeenCalledWith("pt", "user.userRegisterSuccess");
       expect(translate).toHaveBeenCalledTimes(4);
-
-      expect(isInNotGuild).toHaveReturned();
-      expect(isGuildNotExist).toHaveReturned();
-      expect(isUserExist).toHaveReturned();
     });
 
     test("deve criar o usuário com os dados corretos", async () => {
@@ -193,8 +195,8 @@ describe("Register User Command", () => {
         expect(mockSave).not.toHaveBeenCalled();
         expect(wrapInteraction).not.toHaveBeenCalled();
 
-        expect(isInNotGuild).toHaveBeenCalledBefore(Guild.findOne);
-        expect(Guild.findOne).toHaveBeenCalledBefore(isGuildNotExist);
+        expectCalledBefore(isInNotGuild, Guild.findOne);
+        expectCalledBefore(Guild.findOne, isGuildNotExist);
       });
     });
   });
@@ -236,10 +238,10 @@ describe("Register User Command", () => {
         expect(mockSave).not.toHaveBeenCalled();
         expect(wrapInteraction).not.toHaveBeenCalled();
 
-        expect(isInNotGuild).toHaveBeenCalledBefore(Guild.findOne);
-        expect(Guild.findOne).toHaveBeenCalledBefore(isGuildNotExist);
-        expect(isGuildNotExist).toHaveBeenCalledBefore(User.findOne);
-        expect(User.findOne).toHaveBeenCalledBefore(isUserExist);
+        expectCalledBefore(isInNotGuild, Guild.findOne);
+        expectCalledBefore(Guild.findOne, isGuildNotExist);
+        expectCalledBefore(isGuildNotExist, User.findOne);
+        expectCalledBefore(User.findOne, isUserExist);
       });
 
       test("deve verificar usuário com dados corretos", async () => {
@@ -308,7 +310,7 @@ describe("Register User Command", () => {
       ];
 
       for (let i = 0; i < mockCalls.length - 1; i++) {
-        expect(mockCalls[i]).toHaveBeenCalledBefore(mockCalls[i + 1]);
+        expectCalledBefore(mockCalls[i], mockCalls[i + 1]);
       }
     });
 

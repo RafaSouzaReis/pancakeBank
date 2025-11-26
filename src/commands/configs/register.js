@@ -49,7 +49,6 @@ module.exports = {
 
     const emoji = interaction.options.getString("emoji");
     const emojiMatch = emoji.match(/.*?:.*?:(\d+)/);
-    const regexGif = /^<a?:[a-zA-Z0-9_]+:\d+>$/;
 
     if (
       await isEmojiNotValid(
@@ -62,8 +61,10 @@ module.exports = {
     }
 
     const emojiId = emojiMatch[1];
+
+    const isAnimated = emoji.startsWith("<a:");
     const emojiURL = `https://cdn.discordapp.com/emojis/${emojiId}.${
-      regexGif.test(emoji) ? "gif" : "png"
+      isAnimated ? "gif" : "png"
     }`;
 
     const server = await Guild.findOne({ guildId: interaction.guild.id });
