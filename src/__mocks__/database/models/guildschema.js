@@ -5,8 +5,10 @@ const Guild = jest.fn().mockImplementation((data) => {
   };
 });
 
-Guild.findOne = jest.fn();
-Guild.findOneAndUpdate = jest.fn();
-Guild.create = jest.fn();
+Guild.findOne = jest.fn().mockResolvedValue({
+  guildId: "guild123",
+  coinName: "Pancake",
+  emojiRaw: "🥞",
+});
 
 module.exports = Guild;

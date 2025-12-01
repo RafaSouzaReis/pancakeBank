@@ -5,8 +5,11 @@ const User = jest.fn().mockImplementation((data) => {
   };
 });
 
-User.findOne = jest.fn();
-User.findOneAndUpdate = jest.fn();
-User.create = jest.fn();
+User.findOne = jest.fn().mockResolvedValue({
+  userId: "user123",
+  balance: 1000,
+  lastDaily: null,
+  save: jest.fn().mockResolvedValue(true),
+});
 
 module.exports = User;

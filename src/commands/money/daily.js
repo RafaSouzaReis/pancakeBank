@@ -83,7 +83,7 @@ module.exports = {
     );
 
     await wrapInteraction(interaction, (i) =>
-      i.editReply({
+      i.reply({
         embeds: [embed],
       })
     );

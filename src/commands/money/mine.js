@@ -81,9 +81,8 @@ module.exports = {
       money
     );
 
-    //O money não tem valor a partir daqui
     await wrapInteraction(interaction, (i) =>
-      i.editReply({
+      i.reply({
         embeds: [embed],
       })
     );

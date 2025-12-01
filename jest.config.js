@@ -11,6 +11,8 @@ module.exports = {
     "^@events/(.*)$": "<rootDir>/src/events/$1",
     "^@scripts/(.*)$": "<rootDir>/src/scripts/$1",
     "^@mocks/(.*)$": "<rootDir>/src/__mocks__/$1",
+    "^@services/(.*)$": "<rootDir>/src/services/$1",
+    "^@bicep/(.*)$": "<rootDir>/src/bicep/$1",
   },
   clearMocks: true,
   restoreMocks: true,
